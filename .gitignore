@@ -1,0 +1,22 @@
+# Raw/private evidence
+/evidence/raw/**
+*.pcap
+*.pcapng
+*.har
+*.log
+*.evtx
+*.etl
+diag_*.txt
+fix_*.txt
+wifi_*.txt
+ipconfig*.txt
+route*.txt
+arp*.txt
+hercules*.cnf
+*.cnf
+
+# Windows/IDE noise
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
