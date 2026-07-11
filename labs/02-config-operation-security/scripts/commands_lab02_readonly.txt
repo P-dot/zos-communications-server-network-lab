@@ -1,0 +1,28 @@
+# Lab 02 read-only commands
+
+# VTAM TRLE / OSA-QDIO evidence
+/D NET,ID=OSATRL1E
+
+# TCP/IP HOME continuity check
+/D TCPIP,,NETSTAT,HOME
+
+# Runtime continuity checks
+/D A,TCPIP
+/D A,VTAM
+/D A,TN3270
+
+# Security-policy runtime checks
+/D A,PAGENT
+/D A,IKED
+/D A,NSSD
+
+# Enterprise Extender runtime check
+/D NET,EE
+
+# Do not run in this lab
+# VARY TCPIP,,OBEYFILE
+# VARY NET,...
+# MODIFY VTAM,...
+# TRACE activation
+# DUMP commands
+# RACF changes

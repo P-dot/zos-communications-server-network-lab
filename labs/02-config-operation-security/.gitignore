@@ -1,0 +1,17 @@
+# Ignore raw/private evidence anywhere under this lab
+raw/
+**/raw/
+*.log
+*.dump
+*.dmp
+*.trc
+*.trace
+*.pcap
+*.pcapng
+*.har
+*.evtx
+*.etl
+hercules*.cnf
+*.cnf
+
+# Sanitized PNGs under evidence/sanitized are intentionally allowed.
