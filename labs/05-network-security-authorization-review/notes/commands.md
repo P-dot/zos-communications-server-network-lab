@@ -1,0 +1,19 @@
+# Lab 05 Commands
+
+All commands are read-only.
+
+```text
+SEARCH CLASS(SERVAUTH) MASK(EZB)
+SEARCH CLASS(SERVAUTH) MASK(EZB.NETSTAT)
+SEARCH CLASS(SERVAUTH) MASK(EZB.PAGENT)
+SEARCH CLASS(SERVAUTH) MASK(EZB.STACKACCESS)
+SEARCH CLASS(SERVAUTH) MASK(PORTACCESS)
+```
+
+Recommended exact follow-up command:
+
+```text
+SEARCH CLASS(SERVAUTH) MASK(EZB.PORTACCESS)
+```
+
+Do not run any RACF change commands in this lab, such as `RDEFINE`, `RALTER`, `PERMIT`, `SETROPTS RACLIST REFRESH`, or delete commands.
