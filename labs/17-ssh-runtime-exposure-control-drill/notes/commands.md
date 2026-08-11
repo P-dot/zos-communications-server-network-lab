@@ -1,0 +1,15 @@
+# Commands
+
+```text
+/D A,SSHD4
+/D TCPIP,,NETSTAT,CONN,PORT=22
+/P SSHD4
+/C SSHD4
+/D A,SSHD4
+/D TCPIP,,NETSTAT,CONN,PORT=22
+/S SSHD,JOBNAME=SSHD4
+/D A,SSHD4
+/D TCPIP,,NETSTAT,CONN,PORT=22
+```
+
+No permanent configuration commands were used.
