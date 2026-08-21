@@ -1,0 +1,17 @@
+Lab 20 — Command Inventory
+
+z/OS:
+D TCPIP,,NETSTAT,DEVLINKS
+D TCPIP,,NETSTAT,HOME
+D TCPIP,,NETSTAT,ROUTE
+
+SDSF / SYSLOG:
+F ETH1
+F LCS1
+
+Windows:
+ping <ZOS_IP>
+Test-NetConnection <ZOS_IP> -Port <TN3270_PORT>
+arp -a
+Get-NetAdapter -IncludeHidden
+Get-NetIPAddress -AddressFamily IPv4

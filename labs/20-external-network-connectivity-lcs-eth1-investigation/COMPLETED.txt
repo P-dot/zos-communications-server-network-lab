@@ -1,0 +1,6 @@
+Lab 20 completed.
+
+Diagnostic objective achieved.
+z/OS Communications Server and Hercules LCS/TAP initialization validated.
+External host-to-z/OS reachability remained unresolved.
+Public documentation contains sanitized network information only.
