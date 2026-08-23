@@ -1,0 +1,6 @@
+Lab 21 completed.
+Status: READ-ONLY DISCOVERY / READINESS ASSESSMENT
+Policy Agent software and IBM samples were located.
+RACF integration prerequisites were assessed.
+No system configuration changes were made.
+Controlled PAGENT and AT-TLS implementation is deferred to the next lab.

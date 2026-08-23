@@ -1,0 +1,18 @@
+Lab 21 — Read-only discovery
+
+z/OS UNIX:
+whence pagent
+ls -l /usr/lpp/tcpip/sbin/pagent
+
+RACF / TSO:
+RLIST STARTED PAGENT.*
+RLIST FACILITY BPX.DAEMON ALL
+RLIST SERVAUTH EZB.PAGENT.* ALL
+LISTUSER PAGENT
+
+ISPF:
+Locate *.SEZAINST
+Review EZAPAGSP
+Review PAGENT section of EZARACF
+
+No change commands were executed.
