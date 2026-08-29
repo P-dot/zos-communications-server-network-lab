@@ -1,3 +1,4 @@
-# Screenshots
+# Lab 21 Screenshots
 
-Place only sanitized Lab 21 screenshots here.
+Actual screenshots extracted from the cumulative evidence document supplied during the lab.
+They document PAGENT discovery, RACF/STARTED configuration, PROC troubleshooting, JES/SYSLOG diagnostics, USS checks, STDENV tests, and the final checkpoint.
