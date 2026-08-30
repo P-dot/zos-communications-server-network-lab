@@ -58,3 +58,19 @@ Host-to-z/OS reachability failed
 ```
 
 So the educational conclusion is: **do not troubleshoot TN3270 first when TN3270 is already listening. Troubleshoot the emulated network attachment: LCS/ETH1/OSA/tunnel/adapter.**
+
+---
+
+## Part of the z/OS Engineering Laboratory
+
+This repository is a specialized component of the broader **z/OS Engineering Laboratory** built on z/OS ADCD 1.11 / Hercules.
+
+### Master architecture
+
+https://github.com/P-dot/zos-adcd-hercules-engineering-lab
+
+### Engineering methodology
+
+```text
+Build -> Execute -> Observe -> Diagnose -> Correct -> Validate -> Document
+```
