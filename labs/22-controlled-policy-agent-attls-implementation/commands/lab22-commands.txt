@@ -1,0 +1,23 @@
+# Commands/configuration captured for the Lab 22 milestone
+
+# Policy Agent environment member
+PAGENT_CONFIG_FILE=/etc/pagent.conf
+PAGENT_LOG_FILE=SYSLOGD
+LIBPATH=/usr/lib
+TZ=CET-1CEST
+
+# Policy Agent main configuration prepared during the lab
+TcpImage TCPIP FLUSH PURGE
+TTLSConfig /etc/pagent/TCPIP_TTLS.policy
+
+# Persistent TCP/IP profile statement
+TCPCONFIG RESTRICTLOWPORTS TTLS
+
+# Minimal runtime OBEY input
+TCPCONFIG TTLS
+
+# Runtime command form evidenced in the lab
+/V TCPIP,TCPIP,O,USER.OBEY
+
+# Closing runtime evidence
+EZZ4249I TCPIP INSTALLED TTLS POLICY HAS NO RULES
