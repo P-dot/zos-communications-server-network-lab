@@ -1,0 +1,3 @@
+RACF handoff: mainframe-racf-security-evidence Lab 33
+Retained artifacts: H7USER / LAB33RING / LAB33CERT
+Communications Server prior dependencies: Labs 08, 16, 19, 22

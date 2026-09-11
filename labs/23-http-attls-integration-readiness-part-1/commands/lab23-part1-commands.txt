@@ -1,0 +1,20 @@
+# Lab 23 Part 1 - Commands / read-only actions
+
+# ISPF Browse
+ADCD.Z111S.PROCLIB(HTTPD1)
+
+# USS read-only review
+cat /web/httpd1/httpd.conf
+grep -i -E 'port|listen|bind|ssl|https|443' /web/httpd1/httpd.conf
+
+# RACF read-only discovery
+LISTUSER WEBSRV1
+SEARCH CLASS(STARTED) MASK(HTTPD)
+RLIST STARTED HTTPD1.** ALL
+
+# SDSF/SYSLOG search
+F IEF695I
+F HTTPD1
+
+# Important: a FACILITY RACLIST refresh appears in supplied evidence, but it was not required
+# for these read-only STARTED-class queries and is not part of the prescribed Part 1 procedure.
