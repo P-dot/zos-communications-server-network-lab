@@ -1,0 +1,80 @@
+Lab 23 Part 2 — command record
+================================
+
+RACF / identity / certificate investigation
+--------------------------------------------
+LISTUSER TCPIP
+RLIST STARTED TCPIP.* ALL
+RACDCERT ID(H7USER) LISTRING(LAB33RING)
+RLIST FACILITY IRR.DIGTCERT.LISTRING ALL
+RLIST FACILITY IRR.DIGTCERT.GENCERT ALL
+PERMIT IRR.DIGTCERT.LISTRING CLASS(FACILITY) ID(TCPIP) ACCESS(UPDATE)
+PERMIT IRR.DIGTCERT.GENCERT CLASS(FACILITY) ID(TCPIP) ACCESS(CONTROL)
+RDEFINE FACILITY IRR.DIGTCERT.GENCERT UACC(NONE)
+SETROPTS RACLIST(FACILITY) REFRESH
+RLIST FACILITY IRR.DIGTCERT.GENCERT ALL
+LISTUSER HTTPD1
+
+Observed identity result:
+ICH30001I UNABLE TO LOCATE USER ENTRY HTTPD1
+
+USS / Policy Agent configuration work
+-------------------------------------
+# Separate image-file form tested during the investigation:
+echo "TTLSConfig /etc/pagent/TCPIP_TTLS.policy" > /etc/pagent/TCPIP.image
+cp /etc/pagent.conf /etc/pagent.conf.lab23bak
+
+# A mistyped /ect path was attempted once and failed harmlessly with EDC5129I.
+# It did not replace /etc/pagent.conf.
+
+# Known Lab 22 compact form restored:
+echo "TcpImage TCPIP FLUSH PURGE" > /etc/pagent.conf
+echo "TTLSConfig /etc/pagent/TCPIP_TTLS.policy" >> /etc/pagent.conf
+cat /etc/pagent.conf
+
+# Policy built line-by-line with echo because the 3270 OMVS terminal did not
+# provide a usable curses editor.
+cat /etc/pagent/TCPIP_TTLS.policy
+
+Policy Agent starts
+-------------------
+/S PAGENT
+
+Repeated observed console sequence:
+EZZ8431I PAGENT STARTING
+EZZ8434I PAGENT EXITING ABNORMALLY
+
+Diagnostic log attempt
+----------------------
+# USER.PAGENT.ENV(PAGENT) was changed temporarily to:
+PAGENT_CONFIG_FILE=/etc/pagent.conf
+PAGENT_LOG_FILE=/tmp/pagent.log
+LIBPATH=/usr/lib
+TZ=CET-1CEST
+
+rm -f /tmp/pagent.log
+/S PAGENT
+cat /tmp/pagent.log
+
+Observed:
+EDC5129I No such file or directory
+
+Maximum LogLevel attempt
+------------------------
+cp /etc/pagent.conf /etc/pagent.conf.pre511
+echo "LogLevel 511" > /etc/pagent.conf
+echo "TcpImage TCPIP FLUSH PURGE" >> /etc/pagent.conf
+echo "TTLSConfig /etc/pagent/TCPIP_TTLS.policy" >> /etc/pagent.conf
+cat /etc/pagent.conf
+/S PAGENT
+ls -l /tmp/pagent*
+cat /tmp/pagent.log
+
+Observed:
+- PAGENT again issued EZZ8431I followed by EZZ8434I.
+- No expected /tmp/pagent.log was available after the failed start.
+
+IMPORTANT CLOSE CONDITION
+-------------------------
+TCPCONFIG TTLS was NOT enabled during this troubleshooting checkpoint.
+The TCP/IP stack remains on the NOTTLS rollback baseline established after Lab 22.

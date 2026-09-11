@@ -1,0 +1,4 @@
+# Final observed compact configuration restored from the Lab 22 pattern.
+# LogLevel 511 was also tested temporarily during diagnostics.
+TcpImage TCPIP FLUSH PURGE
+TTLSConfig /etc/pagent/TCPIP_TTLS.policy

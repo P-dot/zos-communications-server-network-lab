@@ -1,0 +1,26 @@
+# Experimental Lab 23 Part 2 policy captured from the evidence.
+# NOT YET VALIDATED on this z/OS V1R11 image.
+
+TTLSRule HTTPD1_RULE
+{
+  LocalPortRange 80
+  Jobname HTTPD1
+  Direction Inbound
+  TTLSGroupActionRef HTTPD1_GRP
+  TTLSEnvironmentActionRef HTTPD1_ENV
+}
+
+TTLSGroupAction HTTPD1_GRP
+{
+  TTLSEnabled On
+  Trace 3
+}
+
+TTLSEnvironmentAction HTTPD1_ENV
+{
+  HandshakeRole Server
+  TTLSKeyRingParms
+  {
+    Keyring H7USER/LAB33RING
+  }
+}

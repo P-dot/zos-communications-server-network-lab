@@ -1,0 +1,4 @@
+# Temporary diagnostic form tested during Part 2.
+LogLevel 511
+TcpImage TCPIP FLUSH PURGE
+TTLSConfig /etc/pagent/TCPIP_TTLS.policy

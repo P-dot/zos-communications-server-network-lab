@@ -1,0 +1,6 @@
+Text security scan before packaging
+==================================
+
+Potential private IPv4 matches:
+
+Potential MAC matches:
