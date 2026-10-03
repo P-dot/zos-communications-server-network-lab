@@ -2,1011 +2,900 @@
 
 ## Purpose
 
-This document defines the role of `zos-communications-server-network-lab` inside the wider z/OS Engineering Laboratory.
+This document defines how `zos-communications-server-network-lab` integrates with the wider IBM z/OS Engineering Portfolio under **Architecture V2 / Engineering Control**.
 
-The repository is the dedicated **networking, communications, network-security observation, runtime-control and transport-hardening track** for the ecosystem.
+The repository owns the **networking interpretation** of Communications Server behavior. It connects TCP/IP, VTAM, TN3270, network-facing USS services, RACF/SAF dependencies, Policy Agent, AT-TLS and observability without absorbing the responsibilities of the repositories that own security, USS, batch or application engineering.
 
-Its scope includes Communications Server configuration and runtime behavior, TCP/IP, VTAM, TN3270, exposed TCP services, UNIX-side service configuration, RACF-linked network security controls, certificate/keyring readiness, SMF/network logging readiness, external connectivity troubleshooting, started-task identity review, Policy Agent and AT-TLS readiness, and controlled enablement work.
+The guiding rule is:
 
-This document intentionally distinguishes four different states:
-
-```text
-VALIDATED
-INVESTIGATED
-PARTIALLY IMPLEMENTED
-PLANNED
-```
-
-A technology is not described as fully implemented merely because its configuration artifacts, samples or prerequisites exist.
+> **Integrate domains through evidence and explicit handoffs; do not duplicate another repository's implementation.**
 
 ---
 
-# 1. Position in the wider z/OS laboratory
+## 1. Domain ownership
 
-The repository sits between base z/OS infrastructure, RACF/SAF security, USS, network services and observability.
+### Communications Server owns
 
-```text
-                    z/OS Engineering Laboratory
-                               |
-                               v
-                    Communications Server
-                               |
-          +--------------------+--------------------+
-          |                    |                    |
-          v                    v                    v
-        TCP/IP                VTAM                TN3270
-          |
-          +-----------+--------+----------+
-                      |                   |
-                      v                   v
-                TCP services          USS services
-             FTP / HTTP / SSH       sshd / files
-                      |
-                      v
-                   RACF / SAF
-          identities / certificates / policy
-                      |
-                      v
-                   SMF / audit
-                      |
-                      v
-             network security evidence
-```
+- TCP/IP runtime and profile interpretation;
+- VTAM/TN3270 networking context;
+- listener and service-exposure analysis;
+- FTP/HTTP/SSH network behavior;
+- network attachment and reachability diagnosis;
+- LCS/ETH1 investigation;
+- network-facing started-task correlation;
+- Policy Agent networking role;
+- AT-TLS policy and transport behavior;
+- transport-security activation and validation;
+- network-side rollback;
+- network observability requirements.
 
-The repository does not replace the RACF, USS or central z/OS engineering repositories. It consumes those domains where needed and owns the networking interpretation.
-
----
-
-# 2. Repository responsibilities
-
-The repository is responsible for documenting and validating:
-
-- Communications Server runtime state;
-- TCP/IP profile configuration;
-- VTAM and TN3270 networking context;
-- exposed TCP services;
-- FTP, HTTP and SSH runtime exposure;
-- z/OS UNIX-side network-service configuration;
-- network-security authorization context;
-- RACF certificate/keyring readiness for network encryption;
-- network logging and SMF readiness;
-- network started-task identity mapping;
-- external connectivity diagnosis;
-- emulator-to-z/OS network attachment investigation;
-- change-control and rollback planning for network changes;
-- Policy Agent discovery and readiness;
-- AT-TLS prerequisite analysis;
-- controlled AT-TLS enablement milestones.
-
-The repository is not responsible for:
+### Communications Server does not own
 
 - general RACF administration;
-- general USS administration;
-- general SMF engineering;
-- general JES2 engineering;
-- production firewall administration;
-- production PKI design;
-- production network architecture;
-- claiming enterprise high availability from an emulator lab.
+- generic USS administration;
+- JES2/spool engineering;
+- scheduler implementation;
+- application code;
+- generic SMF subsystem engineering;
+- enterprise PKI design;
+- host/emulator networking as if it were native z/OS configuration.
+
+When another domain is required, this repository records the dependency and links to the owning repository.
 
 ---
 
-# 3. Current lab progression
+## 2. Evidence states
 
-The current repository contains Labs 02 through 22.
+Cross-repository documentation uses explicit states.
 
-## Phase A — Communications Server and network-security baseline
+| State | Definition |
+|---|---|
+| **VALIDATED LOCALLY** | Demonstrated by evidence in this repository |
+| **VALIDATED IN TARGET REPOSITORY** | Demonstrated by the repository that owns the capability |
+| **READINESS** | Prerequisites/configuration assessed; implementation not claimed |
+| **PARTIAL / CONTROLLED STOP** | Progress demonstrated but final state deliberately not claimed |
+| **BLOCKER DOCUMENTED** | Failure/dependency boundary isolated and preserved |
+| **PLANNED** | Future integration without sufficient evidence |
 
-| Lab | Area | Role |
-|---|---|---|
-| Lab 02 | Configuration, Operation, Security and Enterprise Extender | Communications Server foundation |
-| Lab 03 | Network Security Baseline | Initial network-security posture |
-| Lab 04 | TCP/IP Profile Security Review | TCP/IP configuration inspection |
-| Lab 05 | Network Security Authorization Review | Authorization-related review |
-| Lab 06 | Network Security Policy Infrastructure Discovery | Policy infrastructure discovery |
-| Lab 07 | TN3270 Service Security Exposure Review | Interactive-access exposure |
-| Lab 08 | Exposed TCP Services Configuration Review | Service exposure inventory |
-| Lab 09 | RACF Certificate and Keyring Inventory | TLS/AT-TLS certificate readiness |
-| Lab 10 | Network Security Logging and SMF Readiness | Audit/logging readiness |
-| Lab 11 | z/OS UNIX Network Service Configuration Review | USS-side service correlation |
-| Lab 12 | External Reachability Validation Attempt | End-to-end reachability attempt |
-| Lab 13 | Network Hardening Change Control and Rollback Baseline | Safe-change preparation |
-
-This phase is primarily diagnostic and baseline-oriented.
-
----
-
-## Phase B — controlled service exposure and hardening
-
-| Lab | Area | Role |
-|---|---|---|
-| Lab 14 | FTP Exposure Hardening Draft | Hardening design |
-| Lab 15 | FTP Runtime Exposure Control Drill | Runtime FTP control |
-| Lab 16 | HTTP Runtime Exposure Control Drill | Runtime HTTP control |
-| Lab 17 | SSH Runtime Exposure Control Drill | Runtime SSH control |
-| Lab 18 | TN3270 Safe Hardening Planning | Critical-access-path hardening planning |
-| Lab 19 | Network Started Task Identity Baseline | Service identity/security baseline |
-
-The design principle for this phase is:
+The distinction matters particularly for transport security:
 
 ```text
-observe service
-   |
-   v
-understand dependency
-   |
-   v
-prepare rollback
-   |
-   v
-apply narrow runtime control
-   |
-   v
-validate effect
-   |
-   v
-restore safe state
+certificate exists
+       ≠
+service can consume certificate
+       ≠
+TTLS policy accepted
+       ≠
+TLS handshake succeeds
+       ≠
+application traffic proven encrypted
 ```
 
-TN3270 is treated more cautiously than non-critical services because it is the primary interactive access path into the lab system.
-
 ---
 
-## Phase C — external connectivity and transport-security evolution
+## 3. Current evidence progression
 
-| Lab | Area | Status |
+### Foundation — Labs 02–13
+
+The early sequence establishes:
+
+- Communications Server configuration;
+- TCP/IP/VTAM context;
+- network security baseline;
+- exposed services;
+- authorization dependencies;
+- certificate/key-ring inventory;
+- logging/SMF readiness;
+- USS service correlation;
+- external reachability investigation;
+- change-control and rollback discipline.
+
+These labs create the baseline required before transport hardening.
+
+### Runtime control — Labs 14–19
+
+The second sequence moves from observation toward controlled operation:
+
+- FTP hardening design;
+- FTP runtime exposure control;
+- HTTP runtime exposure control;
+- SSH runtime exposure control;
+- TN3270 hardening planning;
+- network started-task identity baseline.
+
+The important operational distinction is that TN3270 is an access dependency and therefore requires stronger rollback discipline.
+
+### Connectivity and transport security — Labs 20–23
+
+| Evidence | State | Meaning |
 |---|---|---|
-| Lab 20 | External Network Connectivity and LCS/ETH1 Investigation | Completed diagnosis / partial connectivity |
-| Lab 21 | Policy Agent / AT-TLS Readiness Assessment | Completed read-only readiness assessment |
-| Lab 22 | Controlled Policy Agent & AT-TLS Enablement Milestone | Controlled runtime milestone reached |
+| Lab 20 — LCS/ETH1 | Completed diagnosis / partial connectivity | z/OS-side progress demonstrated; full external path not claimed |
+| Lab 21 — PAGENT/AT-TLS readiness | Readiness complete | prerequisites assessed; system unchanged |
+| Lab 22 — TTLS enablement | PASS milestone | TCP/IP reached TTLS policy-processing layer |
+| Lab 23 Part 1 — HTTP readiness | PASS checkpoint | HTTP target and identity/security questions characterized |
+| Lab 23 Part 2 — PAGENT troubleshooting | PARTIAL / CONTROLLED STOP | abnormal exit preserved; runtime returned/remained safe NOTTLS |
 
-This is the most important current evolution of the repository.
+Empty working directories are not portfolio evidence and are excluded from the published capability state.
 
 ---
 
-# 4. Lab 20 — external connectivity boundary
+## 4. Core z/OS integration
 
-Lab 20 established a useful diagnostic separation between the internal z/OS networking stack and the emulator/host attachment layer.
+Repository:
 
-Validated items include:
+`P-dot/zos-adcd-hercules-engineering-lab`
+
+Core z/OS owns the platform context on which networking runs:
 
 ```text
-TCP/IP profile processing
-DEVICE LCS1 / LINK ETH1 initialization
-LCS1 READY
-Hercules LCS device availability
-Hercules TAP backend initialization
-internal TN3270 listener availability
+z/OS
+  |
+  +--> address spaces
+  +--> PARMLIB / PROCLIB
+  +--> console / system operation
+  +--> storage and system services
+  |
+  +--> Communications Server
 ```
 
-External host-to-z/OS reachability was **not fully established**.
+Communications Server consumes that platform and owns the networking-specific interpretation.
 
-The resulting architecture is therefore:
+A networking failure should not automatically be treated as a TCP/IP configuration failure. The investigation must identify whether the boundary is:
 
 ```text
-z/OS TCP/IP stack
+application
+transport policy
+TCP/IP
+VTAM
+device/link
+emulator
+host network
+```
+
+Lab 20 is the principal example of this layered diagnosis.
+
+---
+
+## 5. RACF / SAF integration
+
+Repository:
+
+`P-dot/mainframe-racf-security-evidence`
+
+RACF owns:
+
+- identity;
+- effective authority;
+- general-resource profiles;
+- STARTED-class security interpretation;
+- SERVAUTH authorization;
+- FACILITY authority;
+- certificate/key-ring lifecycle;
+- least-privilege validation.
+
+Communications Server owns the networking question:
+
+> Which network component or service requires that identity or authorization?
+
+The integration can therefore be represented as:
+
+```text
+network service / component
+          ↓
+execution identity
+          ↓
+SAF request / certificate requirement
+          ↓
+RACF policy
+          ↓
+effective authorization
+          ↓
+network runtime effect
+```
+
+A RACF profile existing does not by itself prove the network behavior. Likewise, a listening network service does not prove that its RACF security model is correct.
+
+---
+
+## 6. Cryptographic handoff from RACF
+
+The current portfolio has a concrete security-to-network sequence.
+
+RACF evidence establishes:
+
+```text
+Lab 31
+authorization baseline
+    ↓
+Lab 32
+controlled cryptographic delegation
+    ↓
+Lab 33
+certificate / key-ring lifecycle
+    ↓
+LAB33CERT + LAB33RING retained
+```
+
+Communications Server consumes that handoff:
+
+```text
+Lab 23 Part 1
+HTTPD1 target discovery
++ STARTED-class investigation
++ key-ring consumption question
+        ↓
+Lab 23 Part 2
+retained ring/certificate reviewed
++ initial policy work
++ PAGENT controlled troubleshooting
+        ↓
+PARTIAL / CONTROLLED STOP
+```
+
+The following are **not yet promoted to validated capability**:
+
+```text
+stable PAGENT operation for target policy
+validated HTTP TTLSRule
+validated execution-context access to retained key ring
+successful HTTP TLS handshake
+encrypted end-to-end HTTP traffic
+```
+
+This is a genuine I2-style cross-repository integration path even though its final transport outcome remains incomplete: the handoff itself is explicit, evidenced and bounded.
+
+---
+
+## 7. USS integration
+
+Repository:
+
+`P-dot/UNIX_System_Services-`
+
+Communications Server may depend on USS for:
+
+- daemon execution;
+- `/etc` configuration;
+- Policy Agent configuration files;
+- logging paths;
+- file ownership and permissions;
+- shell-side diagnostics.
+
+USS owns generic POSIX administration.
+
+Communications Server owns what those objects mean for a network service.
+
+Example:
+
+```text
+/etc/pagent.conf
       |
-      | internally functional
-      v
-LCS1 / ETH1
+      +--> USS: file/path/permission semantics
       |
-      | emulator / host integration gap
-      v
-external host network
+      +--> Communications Server: Policy Agent configuration meaning
 ```
 
-This result must not be described as full external connectivity.
-
-The lab's value is diagnostic: it isolates the remaining problem to the emulator/host networking integration layer rather than incorrectly attributing it to TN3270 or the basic TCP/IP started task.
-
----
-
-# 5. Lab 21 — Policy Agent / AT-TLS readiness
-
-Lab 21 is explicitly a **read-only readiness assessment**.
-
-Validated findings include:
-
-- Policy Agent executable present at `/usr/lpp/tcpip/sbin/pagent`;
-- IBM Policy Agent and RACF sample material located;
-- RACF `BPX.DAEMON` profile present;
-- no `PAGENT` RACF user observed;
-- no `STARTED PAGENT.*` mapping observed;
-- no matching `SERVAUTH EZB.PAGENT.*` profile observed;
-- PAGENT not active;
-- no system changes performed.
-
-The correct interpretation is:
+Similarly:
 
 ```text
-Policy Agent software exists
-        |
-        v
-supporting sample material exists
-        |
-        v
-security/runtime prerequisites incomplete
-        |
-        v
-implementation deferred
+sshd_config
+      |
+      +--> USS: file/process context
+      |
+      +--> Communications Server: exposed SSH service behavior
 ```
 
-This lab did **not** implement Policy Agent or AT-TLS.
+This separation prevents the network repository from becoming a second USS course.
 
 ---
 
-# 6. Lab 22 — controlled AT-TLS enablement milestone
+## 8. Policy Agent / AT-TLS integration model
 
-Lab 22 advances the environment beyond readiness assessment, but intentionally stops before complete service encryption.
+The target architecture is:
 
-The validated milestone includes:
+```text
+application service
+        |
+        v
+      TCP/IP
+        |
+        v
+   AT-TLS policy
+        |
+        +--> Policy Agent
+        |
+        +--> traffic selectors
+        |
+        +--> System SSL
+                 |
+                 v
+          RACF certificate/key ring
+```
 
-- Policy Agent executable startup evidence;
-- dedicated environment data set preparation;
-- a PAGENT started-task procedure adapted to use `STDENV`;
-- `/etc/pagent.conf` created;
-- the active TCP/IP profile identified;
-- a rollback copy preserved;
-- persistent `TCPCONFIG ... TTLS` enablement added;
-- minimal dynamic OBEY input prepared;
-- TCP/IP processed the TTLS enablement without stack restart;
-- runtime message:
+Each layer needs independent evidence.
+
+### Lab 21
+
+Readiness only.
+
+### Lab 22
+
+The TCP/IP stack reached the TTLS policy-processing layer and emitted:
 
 ```text
 EZZ4249I TCPIP INSTALLED TTLS POLICY HAS NO RULES
 ```
 
-The milestone therefore proves:
+That is a meaningful runtime milestone but not proof of encrypted service traffic.
+
+### Lab 23 Part 1
+
+HTTPD1 becomes the selected non-critical integration target. Its implementation, configuration and security-identity questions are characterized without activation.
+
+### Lab 23 Part 2
+
+Policy Agent reaches startup but exits abnormally:
 
 ```text
-TCP/IP
-  |
-  +--> TTLS processing enabled
-  |
-  +--> policy layer reached
-  |
-  +--> no service-specific TTLS rules installed
+EZZ8431I PAGENT STARTING
+EZZ8434I PAGENT EXITING ABNORMALLY
 ```
 
-It does **not** prove:
+The exact cause is not asserted because the evidence does not establish it.
+
+The safe close is:
 
 ```text
-certificate/keyring provisioning complete
-service-specific TTLSRule installed
-Policy Agent stable with final rule set
-TLS handshake validated
-encrypted application traffic validated end to end
+TCP/IP runtime     : NOTTLS
+PAGENT             : stopped
+HTTPD1             : preserved
+AT-TLS policy      : experimental / inactive
+certificate/ring   : retained
 ```
 
-The repository must preserve this distinction.
+This is the current transport-security boundary.
 
 ---
 
-# 7. AT-TLS architecture at the current checkpoint
+## 9. HTTP integration boundary
 
-The current intended chain is:
+HTTP is deliberately preferable to TN3270 for the first service-specific AT-TLS experiment because TN3270 is the primary interactive access path into the laboratory.
 
-```text
-TCP/IP profile
-     |
-     | TCPCONFIG TTLS
-     v
-TCP/IP stack
-     |
-     v
-AT-TLS policy layer
-     ^
-     |
-Policy Agent
-     ^
-     |
-PAGENT environment / STDENV
-     ^
-     |
-/etc/pagent.conf
-     |
-     v
-TTLS policy file
-     |
-     v
-service-specific TTLS rules   <-- not yet completed
-     |
-     v
-RACF certificate / keyring    <-- not yet completed for target service
-     |
-     v
-encrypted service validation  <-- future phase
-```
-
-This is currently a **transport-security enablement path**, not yet a completed encrypted-service implementation.
-
----
-
-# 8. RACF integration boundary
-
-Communications Server depends heavily on RACF/SAF, but this repository does not replace the RACF security repository.
-
-The relationship is:
+The intended sequence is:
 
 ```text
-Communications Server
-       |
-       +--> started-task identity
-       |
-       +--> RACF certificates / keyrings
-       |
-       +--> SAF authorization
-       |
-       +--> SERVAUTH
-       |
-       +--> BPX.DAEMON / UNIX identity context
-       |
-       v
-mainframe-racf-security-evidence
+HTTP baseline
+     ↓
+effective identity resolution
+     ↓
+RACF key-ring access
+     ↓
+PAGENT stable initialization
+     ↓
+minimal TTLSRule
+     ↓
+controlled TTLS activation
+     ↓
+TLS handshake
+     ↓
+encrypted traffic evidence
 ```
 
-The Communications Server repository owns the question:
-
-> What network capability requires this identity, profile, certificate or SAF control?
-
-The RACF repository owns the question:
-
-> How is that identity or resource protected and what effective authority exists?
-
----
-
-# 9. Certificate and keyring readiness
-
-Lab 09 established a read-only RACF certificate/keyring inventory relevant to networking.
-
-Observed results included:
-
-- RACF CERTAUTH material exists;
-- no personal certificate/keyring material was observed for several reviewed network service IDs;
-- one reviewed web-service identity was not defined to RACF;
-- no certificate modifications were performed.
-
-The important distinction is:
-
-```text
-CA trust material exists
-        !=
-service TLS identity provisioned
-```
-
-Therefore the repository can legitimately describe certificate **readiness assessment**, but not completed service TLS provisioning at that checkpoint.
-
----
-
-# 10. SMF and network logging integration
-
-Lab 10 established a network-security logging readiness baseline.
-
-Validated observations include:
-
-- SMF address space active;
-- active SMF parameter member identified;
-- SMF recording configuration reviewed;
-- SYSLOGD not observed active;
-- TRMD not observed active;
-- no active IDS/syslog/TRMD reporting chain demonstrated;
-- zERT documented as unavailable for this older z/OS V1R11 environment.
-
-The architecture is therefore:
-
-```text
-Communications Server events
-        |
-        v
-SMF capability
-        |
-        +--> baseline present
-        |
-        +--> network-security event pipeline not fully demonstrated
-```
-
-zERT must not be presented as implemented in this environment.
-
-For this repository, zERT belongs in the category:
-
-```text
-modern reference capability
-not available in current V1R11 lab
-```
-
----
-
-# 11. USS integration boundary
-
-Lab 11 correlates Communications Server exposure with z/OS UNIX configuration.
-
-Observed evidence includes:
-
-- `/etc/ssh/sshd_config`;
-- SSH protocol 2 configuration;
-- `PermitRootLogin no`;
-- password and public-key authentication configuration;
-- SSH host-key references;
-- SFTP subsystem configuration;
-- SSH, HTTP and FTP process evidence;
-- no active SYSLOG daemon observed in the captured evidence.
-
-The cross-repository boundary is:
-
-```text
-Communications Server
-       |
-       v
-network-facing service
-       |
-       v
-USS process / configuration file
-       |
-       v
-UNIX identity / permissions
-       |
-       v
-RACF / SAF
-```
-
-The USS repository owns generic OMVS/filesystem/process administration.
-
-This repository owns how those UNIX artifacts support or expose z/OS network services.
-
----
-
-# 12. TN3270 as a protected operational dependency
-
-TN3270 is not simply another network listener in this lab.
-
-It is a critical operational dependency because it provides the interactive 3270 access path used to administer and validate much of the environment.
+Native HTTP SSL directives may exist in application configuration, but the current integration design is aimed at transparent AT-TLS below the application layer.
 
 Therefore:
 
 ```text
-FTP / HTTP / SSH
-   |
-   +--> suitable for controlled runtime exposure drills
-
-TN3270
-   |
-   +--> requires stronger rollback planning
-   +--> should not be the first AT-TLS test target
+SSL-capable application configuration
+               ≠
+AT-TLS implementation
 ```
-
-This explains why Lab 18 is framed as safe hardening planning rather than aggressive runtime experimentation.
 
 ---
 
-# 13. Started-task identity
+## 10. TN3270 boundary
 
-Lab 19 introduces the service-identity layer into the network architecture.
+TN3270 is both a network service and an operational dependency.
 
-Relevant architecture:
+It therefore requires:
+
+- baseline listener evidence;
+- client/access dependency awareness;
+- rollback path before transport changes;
+- alternative access considerations;
+- careful separation of authentication behavior from transport protection.
+
+The repository should not use TN3270 as the first uncontrolled TLS experiment.
+
+Any future TN3270 transport-security lab must distinguish:
 
 ```text
-TCPIP / FTPD / HTTPD / SSHD / PAGENT
-              |
-              v
-        started task / process
-              |
-              v
-          security identity
-              |
-              v
-            RACF
-              |
-              v
-        effective authority
+authentication
+authorization
+TN3270 protocol behavior
+transport encryption
+client compatibility
 ```
 
-Future cross-repository validation should correlate network runtime identity with RACF least-privilege controls.
+These are separate evidence questions.
 
 ---
 
-# 14. External connectivity and emulator boundary
+## 11. FTP / JES boundary
 
-The repository must explicitly separate these layers:
+FTP-to-JES is a cross-domain trust boundary.
+
+The networking side can own:
+
+- FTP listener/service context;
+- transport path;
+- FTP configuration;
+- network exposure;
+- transport protection.
+
+The security side can own:
+
+- identity;
+- authentication;
+- authorization;
+- RACF/SAF controls.
+
+The JES side can own:
+
+- submitted workload;
+- JES execution/spool behavior;
+- job lifecycle.
+
+Target architecture:
 
 ```text
-application service
-      |
-TCP/IP listener
-      |
-TCP/IP stack
-      |
-VTAM / device / link definition
-      |
-LCS / emulated adapter
-      |
-Hercules backend
-      |
-host operating system
-      |
-external network
+client
+   ↓
+FTP service
+   ↓
+authentication / RACF
+   ↓
+JES interface
+   ↓
+job submission
+   ↓
+JES2 execution / spool
 ```
 
-A failure at the bottom of this chain must not automatically be interpreted as failure of the z/OS service itself.
+A future/published FTP-JES track should link these domains instead of duplicating them.
 
-Lab 20 is the canonical example of this diagnostic discipline.
+At the current V2 documentation checkpoint, empty Lab 24 working directories are not counted as published local evidence.
 
 ---
 
-# 15. Integration with the central z/OS engineering repository
+## 12. SMF and observability
 
-The central repository owns system-level infrastructure such as:
+Communications Server consumes system observability to prove network behavior.
 
-- startup and system services;
-- storage;
-- JES2;
+Potential evidence sources include:
+
+- console messages;
+- NETSTAT;
+- TCP/IP job output;
+- Policy Agent messages;
 - SMF;
-- diagnostics;
-- backup and recovery;
-- WLM/SRM;
-- system evolution.
+- syslog;
+- packet capture where appropriate and safely sanitized.
 
-Communications Server consumes those capabilities.
+General SMF engineering belongs to the core system domain.
 
-Relevant relationship:
+The current environment has evidence of SMF readiness, but not a complete modern network-security telemetry pipeline.
 
-```text
-central z/OS engineering
-          |
-          v
- system services / SMF / storage
-          |
-          v
- Communications Server
-          |
-          v
- network-facing workloads
-```
-
-The Communications Server repo should link back to the central architecture instead of duplicating system-engineering documentation.
+Modern capabilities such as zERT must not be described as validated in the current z/OS V1R11 laboratory when they are unavailable there.
 
 ---
 
-# 16. Integration with RACF
+## 13. Workload automation integration
 
-Primary chain:
+Repository:
+
+`P-dot/zos-batch-scheduler`
+
+The scheduler owns:
 
 ```text
-RACF / SAF
-    |
-    v
-network service identity
-    |
-    v
-SERVAUTH / certificate / keyring / UNIX authorization
-    |
-    v
+when a workload runs
+dependencies
+conditions/resources
+restart/rerun logic
+```
+
+Communications Server owns:
+
+```text
+whether the required network path/service exists
+network runtime state
+transport dependency
+```
+
+Future production-track integration may look like:
+
+```text
+scheduler
+    ↓
+JCL / JES2
+    ↓
+network-dependent batch workload
+    ↓
 Communications Server
-    |
-    v
-network service
+    ↓
+remote service
 ```
 
-Potential future integration branch:
-
-```text
-integration/racf-network-smf
-```
-
-This should validate a narrow security control and its observable network/audit effect.
+Network availability and scheduler dependency logic should be evidenced independently before being combined.
 
 ---
 
-# 17. Integration with USS
+## 14. JCL / JES2 integration
 
-Primary chain:
+JCL/JES repositories own batch execution mechanics.
+
+Communications Server owns network transport.
+
+For FTP/JES-style flows:
 
 ```text
-USS
- |
- +--> /etc configuration
- |
- +--> network daemon
- |
- +--> permissions / ownership
- |
- +--> RACF-backed identity
- |
- v
-Communications Server exposure
+network client
+     ↓
+FTP / Communications Server
+     ↓
+security boundary
+     ↓
+JES interface
+     ↓
+JCL / JES2
 ```
 
-Potential future integration branch:
+The network repository should not reproduce general JCL or spool-management labs.
+
+---
+
+## 15. Application-domain integration
+
+COBOL, Db2 and CICS repositories own application semantics.
+
+Communications Server may eventually provide transport for:
+
+- online transactions;
+- remote application access;
+- Db2 connectivity;
+- HTTP/API front ends;
+- file transfer;
+- application telemetry.
+
+The evidence rule remains:
 
 ```text
-integration/uss-racf-tcpip
+application works locally
+          ≠
+network integration validated
+```
+
+and:
+
+```text
+network path exists
+          ≠
+application behavior validated
+```
+
+Both domains must contribute evidence for an integrated claim.
+
+---
+
+## 16. Change and rollback discipline
+
+Network changes can remove the operator's own access path.
+
+Every material change should therefore answer:
+
+```text
+What is the baseline?
+What exact object changes?
+What dependency can be lost?
+How is rollback performed?
+How is the runtime effect observed?
+What proves recovery?
+```
+
+For critical access paths, the rollback plan is part of the implementation—not an optional note added afterwards.
+
+Lab 22 demonstrates preservation of a pre-change profile state. Lab 23 Part 2 demonstrates the complementary principle: stop the experiment when the failure boundary is not sufficiently understood and preserve a safe runtime.
+
+---
+
+## 17. Publication-security boundary
+
+Network evidence can reveal infrastructure even when no password is visible.
+
+Public artifacts must be reviewed for:
+
+- private/internal IP addresses;
+- MAC addresses;
+- adapter/interface identifiers tied to the host;
+- credentials;
+- secrets;
+- private keys;
+- certificate details that need not be public;
+- terminal/session identifiers;
+- host-specific routing and infrastructure data;
+- unrelated personal information.
+
+Sanitization must preserve the engineering story:
+
+```text
+raw evidence
+     ↓
+security review
+     ↓
+sanitized evidence
+     ↓
+public documentation
 ```
 
 ---
 
-# 18. Integration with SMF
+## 18. Architecture V2 lifecycle mapping
 
-Primary chain:
+The portfolio lifecycle is:
 
 ```text
-network activity
-      |
-      v
-Communications Server
-      |
-      v
-SMF / logging capability
-      |
-      v
-security evidence
+Discover → Baseline → Configure → Operate → Observe
+→ Diagnose → Recover → Improve → Automate → Integrate
 ```
 
-The current repository validates readiness context, not a complete modern network telemetry pipeline.
+Communications Server maps naturally across it.
+
+| Lifecycle stage | Repository evidence |
+|---|---|
+| Discover | service inventory, configuration discovery |
+| Baseline | TCP/IP, VTAM, listeners, security posture |
+| Configure | profile/policy preparation |
+| Operate | runtime service-control drills |
+| Observe | NETSTAT, console, task/process evidence |
+| Diagnose | LCS/ETH1 and PAGENT troubleshooting |
+| Recover | rollback preparation / safe-state restoration |
+| Improve | hardening and transport-security design |
+| Automate | future operational automation |
+| Integrate | RACF, USS, JES2 and application handoffs |
 
 ---
 
-# 19. Integration with scheduler and batch workloads
+## 19. Maturity interpretation
 
-Network connectivity may eventually support batch-oriented transfers or remote service dependencies.
-
-The architecture should remain:
+Architecture V2 maturity:
 
 ```text
-Scheduler
-   |
-   v
-JCL / JES2 workload
-   |
-   v
-network dependency
-   |
-   v
-Communications Server
+M0 Exploratory
+M1 Foundational
+M2 Operational
+M3 Resilient
+M4 Automated
+M5 Integrated
 ```
 
-The scheduler decides when workload runs.
+The repository contains evidence at different maturity levels rather than one blanket repository score.
 
-JCL describes the workload.
+Examples:
 
-JES2 executes it.
+- baseline discovery is foundational;
+- controlled service operations are operational;
+- rollback-oriented changes move toward resilience;
+- cross-repository RACF/HTTP/AT-TLS work demonstrates integration behavior;
+- automation and complete encrypted-service validation remain areas for further maturity.
 
-Communications Server provides the network path.
-
-These roles must remain separate.
+No single maturity label should conceal those differences.
 
 ---
 
-# 20. Integration with application repositories
+## 20. Integration levels
 
-Future application chains may include:
+Architecture V2 integration:
 
 ```text
-CICS / COBOL / Db2
-        |
-        v
-network-facing transaction or service dependency
-        |
-        v
-Communications Server
+I0 Standalone
+I1 Cross-component
+I2 Cross-repository
+I3 Production-like
 ```
 
-No such full production-style cross-repository chain should be described as validated until implemented with evidence.
+Examples:
+
+- TCP/IP ↔ VTAM ↔ service runtime: cross-component;
+- Communications Server ↔ USS: cross-repository;
+- Communications Server ↔ RACF Labs 31–33 ↔ HTTP AT-TLS Lab 23: cross-repository;
+- complete production-like encrypted service with operational telemetry and recovery: not yet claimed.
 
 ---
 
-# 21. Validated capability matrix
+## 21. Production tracks
+
+### Secure Network Service
+
+```text
+service
+  ↓
+network exposure
+  ↓
+identity / RACF
+  ↓
+transport policy
+  ↓
+runtime validation
+  ↓
+observability
+```
+
+Current evidence covers substantial portions but not the final service-specific encrypted path.
+
+### Problem Determination
+
+```text
+symptom
+  ↓
+identify layer
+  ↓
+collect runtime evidence
+  ↓
+isolate boundary
+  ↓
+change only justified component
+  ↓
+validate or preserve blocker
+```
+
+Labs 20 and 23 Part 2 are strong examples.
+
+### End-to-End Production Cycle
+
+Communications Server provides the network layer that can connect security, batch and application domains in future integrated scenarios.
+
+---
+
+## 22. Current capability matrix
 
 | Capability | Current state |
 |---|---|
-| TCP/IP runtime/configuration inspection | Validated |
-| VTAM/TN3270 runtime context | Validated |
-| TCP service exposure inventory | Validated |
-| FTP runtime exposure control | Lab track present |
-| HTTP runtime exposure control | Lab track present |
-| SSH runtime exposure control | Lab track present |
-| TN3270 hardening planning | Validated as planning track |
-| RACF certificate/keyring inventory | Validated read-only |
-| SMF/network logging readiness | Validated baseline |
-| USS-side service review | Validated read-only |
-| External host-to-z/OS reachability | Partial / not fully established |
-| LCS/ETH1 diagnosis | Validated diagnostic milestone |
-| Policy Agent executable/readiness | Validated |
-| Policy Agent production-style operation | Not yet demonstrated |
-| TTLS enablement in TCP/IP stack | Validated milestone |
-| Service-specific TTLSRule | Not yet implemented at Lab 22 close |
-| RACF certificate/keyring for target AT-TLS service | Not yet implemented at Lab 22 close |
-| End-to-end encrypted service traffic | Not yet validated |
-| zERT | Not available in current z/OS V1R11 environment |
+| TCP/IP configuration/runtime inspection | VALIDATED LOCALLY |
+| VTAM/TN3270 network context | VALIDATED LOCALLY |
+| Listener/service exposure analysis | VALIDATED LOCALLY |
+| FTP runtime control | VALIDATED LOCALLY |
+| HTTP runtime control | VALIDATED LOCALLY |
+| SSH runtime control | VALIDATED LOCALLY |
+| USS/network-service correlation | VALIDATED LOCALLY |
+| Started-task network identity investigation | VALIDATED LOCALLY |
+| LCS/ETH1 diagnosis | PARTIAL CONNECTIVITY / BLOCKER DOCUMENTED |
+| RACF certificate/key-ring inventory | READINESS locally |
+| RACF Lab 33 retained cryptographic artifacts | VALIDATED IN TARGET REPOSITORY |
+| Policy Agent / AT-TLS prerequisite assessment | READINESS |
+| TCP/IP TTLS policy-processing milestone | VALIDATED LOCALLY |
+| HTTP AT-TLS target characterization | VALIDATED LOCALLY |
+| PAGENT startup failure isolation | PARTIAL / CONTROLLED STOP |
+| Stable target-service PAGENT operation | NOT YET VALIDATED |
+| Service-specific TTLSRule | NOT YET VALIDATED |
+| Target-service key-ring consumption | NOT YET VALIDATED |
+| TLS handshake | NOT YET VALIDATED |
+| End-to-end encrypted application traffic | NOT YET VALIDATED |
+| zERT in current V1R11 environment | NOT AVAILABLE / NOT CLAIMED |
 
 ---
 
-# 22. Engineering methodology
+## 23. Learning journey vs runtime architecture
 
-The repository follows the ecosystem-wide methodology:
+The learning order is intentionally simpler than the runtime dependency graph.
 
-```text
-Build
-  ->
-Execute
-  ->
-Observe
-  ->
-Diagnose
-  ->
-Correct
-  ->
-Validate
-  ->
-Document
-```
-
-For network security changes, extend it to:
+### Learning journey
 
 ```text
-Baseline
-  ->
-Identify exposure
-  ->
-Understand dependencies
-  ->
-Prepare rollback
-  ->
-Apply minimal change
-  ->
-Observe runtime effect
-  ->
-Validate
-  ->
-Rollback if required
-  ->
-Document
-```
-
----
-
-# 23. Evidence discipline
-
-A networking lab should preserve enough evidence to answer:
-
-```text
-What was configured?
-What was active?
-What was listening?
-What changed?
-What message proved the change?
-What remained unimplemented?
-What was the rollback path?
-```
-
-Valid evidence can include:
-
-- sanitized screenshots;
-- console messages;
-- NETSTAT results;
-- TCP/IP profile excerpts;
-- started-task context;
-- USS configuration excerpts;
-- RACF display output;
-- SMF readiness evidence;
-- Hercules-side diagnostic output after redaction;
-- before/after configuration states;
-- rollback copies;
-- troubleshooting history.
-
-Failed commands may be retained when they explain how the accepted syntax or platform limitation was discovered.
-
----
-
-# 24. Publication-security discipline
-
-Networking evidence is especially sensitive.
-
-Do not publish unnecessary:
-
-- real IP addresses;
-- MAC addresses;
-- gateways;
-- network prefixes;
-- host adapter names or identifiers;
-- TAP/tunnel host details;
-- hostnames;
-- Windows usernames;
-- local filesystem paths;
-- terminal/session identifiers;
-- certificate serial numbers;
-- distinguished names;
-- private key material;
-- credentials;
-- tokens or secrets.
-
-Use placeholders where necessary, for example:
-
-```text
-<ZOS_IP>
-<HOST_IP>
-<HOST_LCS_IP>
-<HOSTNAME>
-<WINDOWS_USER>
-<LOCAL_PATH>
-```
-
-The repository's existing redaction policy remains authoritative for publication.
-
----
-
-# 25. Repository hygiene
-
-The ecosystem-integration branch should contain only documentation related to ecosystem architecture.
-
-Unrelated local artifacts must not be included accidentally.
-
-At the time of this normalization work, locally untracked ZIP files existed under the Lab 15 and Lab 16 directories. They are outside the scope of this documentation change and should be handled separately.
-
-An empty or anomalous local `labs/labs` directory was also observed. It should not be mixed into this documentation branch.
-
----
-
-# 26. Branch strategy
-
-Use short-lived branches.
-
-Recommended patterns:
-
-```text
-docs/communications-ecosystem-integration-v1
-docs/communications-root-readme-v2
-integration/racf-network-smf
-integration/uss-racf-tcpip
-integration/network-attls-test-service
-fix/<network-specific-slug>
-lab/<number>-<slug>
-```
-
-Lifecycle:
-
-```text
-branch
-  ->
-work
-  ->
-validation
-  ->
-publication-security review
-  ->
-PR
-  ->
-main
-  ->
-delete branch
-```
-
----
-
-# 27. Next transport-security milestone
-
-The logical next AT-TLS engineering phase is:
-
-```text
-choose non-critical test service
-        |
-        v
-prepare RACF certificate/keyring
-        |
-        v
-define service-specific TTLSRule
-        |
-        v
-start Policy Agent under controlled conditions
-        |
-        v
-confirm policy installation
-        |
-        v
-validate TLS handshake
-        |
-        v
-validate encrypted application traffic
-        |
-        v
-collect evidence
-        |
-        v
-rollback / persistence validation
-```
-
-TN3270 should not be the first target because it is the critical interactive access path for the lab.
-
----
-
-# 28. Long-term target architecture
-
-The mature network-security path should eventually look like:
-
-```text
-RACF identity / keyring
-          |
-          v
-Policy Agent
-          |
-          v
-AT-TLS policy
-          |
-          v
-TCP/IP stack
-          |
-          v
-selected network service
-          |
-          v
-encrypted connection
-          |
-          v
-SMF / logging evidence
-          |
-          v
-security validation
-```
-
-This target remains partly planned.
-
-The current repository has reached the point where the TCP/IP stack can process TTLS policy state, but the end-to-end encrypted-service chain remains the next major milestone.
-
----
-
-# 29. Master architecture
-
-This repository is part of the broader z/OS Engineering Laboratory.
-
-Master repository:
-
-https://github.com/P-dot/zos-adcd-hercules-engineering-lab
-
-The central architecture should treat this repository as the owner of:
-
-```text
+TSO/ISPF
+   ↓
+JCL/JES2
+   ↓
+workload automation
+   ↓
+USS
+   ↓
+RACF
+   ↓
 Communications Server
-TCP/IP
-VTAM
-TN3270
-network-facing services
-network exposure diagnostics
-transport-security readiness
-controlled AT-TLS evolution
 ```
 
-while RACF, USS, SMF and other repositories retain ownership of their own domains.
+### Runtime architecture
+
+```text
+              RACF / SAF
+             /          \
+            v            v
+         USS          TCP/IP
+          |          /     \
+          v         v       v
+       daemons     VTAM   services
+                     \      /
+                      v    v
+                      TN3270
+
+       Policy Agent / AT-TLS
+                 |
+                 v
+             System SSL
+                 |
+                 v
+          RACF key rings
+```
+
+The portfolio should preserve both views. One teaches; the other explains the system.
 
 ---
 
-# 30. Repository role summary
+## 24. Navigation and handoff rules
 
-`zos-communications-server-network-lab` is the **network communications and transport-security engineering component** of the wider z/OS lab ecosystem.
-
-Its current progression is:
+A reader should be able to move:
 
 ```text
-network discovery
-      ->
-security baseline
-      ->
-service exposure review
-      ->
-RACF / certificate readiness
-      ->
-SMF / logging readiness
-      ->
-USS service correlation
-      ->
-runtime exposure control
-      ->
-started-task identity
-      ->
-external connectivity diagnosis
-      ->
-Policy Agent readiness
-      ->
-controlled TTLS enablement
-      ->
-future service-specific encrypted validation
+Portfolio
+   ↓
+Domain README
+   ↓
+Lab
+   ↓
+Evidence
+   ↓
+Owning adjacent domain
+   ↓
+Integration track
+   ↓
+Portfolio
 ```
 
-The repository should therefore be presented not as a single LCS/ETH1 troubleshooting exercise, but as an evolving Communications Server engineering track with explicit boundaries between what has been observed, what has been controlled, what has been partially enabled, and what remains to be implemented.
+Cross-repository links should answer a specific question.
+
+Examples:
+
+- Need effective authorization? → RACF repository.
+- Need POSIX ownership/permissions? → USS repository.
+- Need JES job lifecycle? → JCL/JES/core domain.
+- Need scheduler dependency logic? → workload automation repository.
+- Need TCP/IP/AT-TLS behavior? → this repository.
+
+---
+
+## 25. Current integration frontier
+
+The immediate engineering frontier is not “turn TLS on”.
+
+It is:
+
+```text
+diagnose PAGENT initialization
+        ↓
+establish stable Policy Agent baseline
+        ↓
+validate minimum HTTP TTLSRule
+        ↓
+prove RACF key-ring consumption
+        ↓
+controlled TTLS activation
+        ↓
+validate TLS handshake
+        ↓
+validate encrypted HTTP traffic
+        ↓
+add operational observation / rollback evidence
+```
+
+Only then does the HTTP AT-TLS path become a completed encrypted-service capability.
+
+---
+
+## 26. Engineering rule
+
+For every cross-domain network claim:
+
+> **Identify the owning repository, identify the exact evidence state, link the handoff, preserve the rollback boundary, and never promote readiness or configuration presence into a runtime capability without proof.**
+
+That rule keeps the portfolio technically credible as it grows.
