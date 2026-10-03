@@ -1,738 +1,587 @@
-# z/OS Communications Server Network Lab
+# z/OS Communications Server Network Engineering Lab
 
-Hands-on IBM z/OS Communications Server engineering laboratory focused on TCP/IP, VTAM, TN3270, network-facing services, security controls, runtime diagnosis, transport-security readiness, and controlled hardening.
+Hands-on IBM z/OS Communications Server engineering focused on **TCP/IP, VTAM, TN3270, network-facing services, transport security, runtime diagnosis, controlled change and cross-domain security integration**.
 
-This repository documents work performed in a controlled z/OS ADCD / Hercules environment. It has evolved from basic network-evidence collection into a broader Communications Server engineering track covering service exposure, RACF-linked network security, SMF readiness, z/OS UNIX service configuration, external connectivity troubleshooting, started-task identity analysis, Policy Agent readiness, and controlled AT-TLS enablement.
+This repository is the **networking and transport-security domain** of the wider IBM z/OS Engineering Portfolio. It records reproducible laboratory evidence from a controlled ADCD / Hercules environment and deliberately separates validated behavior from readiness findings, partial implementation and planned work.
 
-> **Scope:** educational and engineering laboratory. This repository does not claim production network architecture, production PKI, enterprise high availability, or production-grade encrypted service deployment unless explicitly demonstrated by a lab.
+> **Scope:** educational and engineering laboratory. Evidence from this environment is not presented as production network architecture, enterprise PKI, high availability, or completed encrypted-service deployment unless a lab explicitly demonstrates it.
+
+## Quick navigation
+
+| Destination | Purpose |
+|---|---|
+| [Portfolio](https://github.com/P-dot/P-dot) | Main z/OS engineering portfolio |
+| [Ecosystem integration](docs/ECOSYSTEM-INTEGRATION.md) | Domain ownership and cross-repository boundaries |
+| [Architecture V2](https://github.com/P-dot/zos-adcd-hercules-engineering-lab/tree/main/docs/architecture/v2) | Portfolio architecture and lifecycle |
+| [Engineering Control](https://github.com/P-dot/zos-adcd-hercules-engineering-lab/tree/main/docs/engineering-control) | Baseline, change, recovery and maturity controls |
+| [RACF / SAF Security](https://github.com/P-dot/mainframe-racf-security-evidence) | Identity, authorization, certificates and key rings |
+| [USS](https://github.com/P-dot/UNIX_System_Services-) | OMVS / POSIX runtime engineering |
+| [Core z/OS](https://github.com/P-dot/zos-adcd-hercules-engineering-lab) | System-level engineering |
+| [Workload Automation](https://github.com/P-dot/zos-batch-scheduler) | Batch dependency and scheduling domain |
 
 ---
 
-## Repository mission
+## Repository role
 
-The goal is not simply to prove that TCP/IP is started.
+This repository answers the networking-side questions:
 
-The repository follows a repeatable engineering process:
+> **What service is exposed, how does traffic reach it, which Communications Server component controls it, what security dependency protects it, what changed at runtime, and what evidence proves the result?**
+
+It owns:
+
+- Communications Server runtime and configuration interpretation;
+- TCP/IP profile analysis;
+- VTAM and TN3270 network context;
+- listener and service-exposure analysis;
+- FTP, HTTP and SSH network behavior;
+- network-facing USS service correlation;
+- LCS / ETH1 connectivity investigation;
+- network started-task identity correlation;
+- Policy Agent and AT-TLS engineering;
+- transport-security readiness and controlled activation;
+- network-side rollback and validation;
+- network observability dependencies.
+
+It does **not** duplicate:
+
+- general RACF administration and effective-authority engineering;
+- generic USS administration;
+- JES2/spool engineering;
+- general SMF engineering;
+- scheduler implementation;
+- application-development repositories.
+
+Those capabilities are linked through explicit cross-repository handoffs.
+
+---
+
+## Engineering method
+
+The repository follows the portfolio evidence lifecycle:
+
+```text
+BUILD → EXECUTE → OBSERVE → DIAGNOSE → CORRECT → VALIDATE → DOCUMENT
+```
+
+For network changes, the operational form is:
 
 ```text
 Discover
-  |
-  v
+   ↓
 Baseline
-  |
-  v
+   ↓
 Observe runtime state
-  |
-  v
+   ↓
 Correlate configuration
-  |
-  v
-Identify exposure or dependency
-  |
-  v
-Design narrow change
-  |
-  v
+   ↓
+Identify exposure / dependency
+   ↓
 Prepare rollback
-  |
-  v
+   ↓
+Apply minimum justified change
+   ↓
 Validate runtime effect
-  |
-  v
-Document evidence
+   ↓
+Restore or preserve safe state
+   ↓
+Document evidence and remaining gaps
 ```
 
-The central questions are:
-
-> **What network service is active, how is it configured, what security boundary protects it, what depends on it, and how can a change be validated safely?**
+A failed or partial implementation can be valid engineering evidence when the failure boundary is demonstrated and the system is left in a known safe state.
 
 ---
 
-# Current status
+## Evidence-state vocabulary
 
-The repository currently contains Labs **02 through 22**.
+| State | Meaning |
+|---|---|
+| **VALIDATED LOCALLY** | Demonstrated by evidence in this repository |
+| **VALIDATED IN TARGET REPOSITORY** | Demonstrated by another portfolio domain and consumed here as a dependency |
+| **PARTIAL / CONTROLLED STOP** | Useful engineering progress was validated, but the intended end state was deliberately not claimed |
+| **READINESS** | Prerequisites or architecture were assessed without claiming implementation |
+| **BLOCKER DOCUMENTED** | A boundary or dependency was isolated and preserved as evidence |
+| **PLANNED** | Intended future work without sufficient evidence yet |
 
-The track now covers:
-
-- Communications Server configuration and operation
-- TCP/IP profile review
-- VTAM and TN3270 runtime context
-- exposed TCP service inventory
-- FTP, HTTP and SSH runtime exposure
-- RACF certificate and keyring readiness
-- network authorization context
-- z/OS UNIX-side service configuration
-- SMF and logging readiness
-- external reachability investigation
-- change control and rollback planning
-- started-task identity baseline
-- Hercules LCS / ETH1 troubleshooting
-- Policy Agent readiness
-- controlled AT-TLS enablement
-
-The repository therefore represents a **Communications Server and network-security engineering track**, not only an initial LCS/ETH1 troubleshooting exercise.
+This vocabulary prevents configuration presence from being confused with working runtime behavior.
 
 ---
 
-# Lab navigation
+# Lab index
 
-## Foundation and security baseline
+## 1. Communications Server and security baseline
 
-| Lab | Topic | Focus |
+| Lab | Focus | Evidence state |
 |---|---|---|
-| [Lab 02](labs/02-config-operation-security/) | Configuration, Operation, Security and Enterprise Extender | Communications Server foundation |
-| [Lab 03](labs/03-network-security-baseline/) | Network Security Baseline | Initial security posture |
-| [Lab 04](labs/04-tcpip-profile-security-review/) | TCP/IP Profile Security Review | TCP/IP configuration inspection |
-| [Lab 05](labs/05-network-security-authorization-review/) | Network Security Authorization Review | Authorization-related controls |
-| [Lab 06](labs/06-network-security-policy-infrastructure-discovery/) | Policy Infrastructure Discovery | Security-policy readiness |
-| [Lab 07](labs/07-tn3270-service-security-exposure-review/) | TN3270 Exposure Review | Interactive-access exposure |
-| [Lab 08](labs/08-exposed-tcp-services-configuration-review/) | Exposed TCP Services Review | Service inventory and configuration |
-| [Lab 09](labs/09-racf-certificate-keyring-inventory/) | RACF Certificate / Keyring Inventory | TLS and AT-TLS readiness |
-| [Lab 10](labs/10-network-security-logging-smf-readiness-review/) | Logging and SMF Readiness | Audit / telemetry readiness |
-| [Lab 11](labs/11-zos-unix-network-service-configuration-review/) | z/OS UNIX Network Services | USS-side service correlation |
-| [Lab 12](labs/12-external-reachability-validation-attempt/) | External Reachability Attempt | End-to-end connectivity attempt |
-| [Lab 13](labs/13-network-hardening-change-control-rollback-baseline/) | Hardening Change Control | Safe change and rollback baseline |
+| [02](labs/02-config-operation-security/) | Configuration, operation, security and Enterprise Extender | Validated locally |
+| [03](labs/03-network-security-baseline/) | Network security baseline | Validated locally |
+| [04](labs/04-tcpip-profile-security-review/) | TCP/IP profile security review | Validated locally |
+| [05](labs/05-network-security-authorization-review/) | Network authorization review | Validated locally |
+| [06](labs/06-network-security-policy-infrastructure-discovery/) | Policy infrastructure discovery | Readiness / discovery |
+| [07](labs/07-tn3270-service-security-exposure-review/) | TN3270 exposure review | Validated locally |
+| [08](labs/08-exposed-tcp-services-configuration-review/) | Exposed TCP services | Validated locally |
+| [09](labs/09-racf-certificate-keyring-inventory/) | RACF certificate / key-ring inventory | Readiness |
+| [10](labs/10-network-security-logging-smf-readiness-review/) | Logging and SMF readiness | Readiness |
+| [11](labs/11-zos-unix-network-service-configuration-review/) | USS network-service correlation | Validated locally |
+| [12](labs/12-external-reachability-validation-attempt/) | External reachability attempt | Investigation |
+| [13](labs/13-network-hardening-change-control-rollback-baseline/) | Change control and rollback baseline | Validated locally |
 
----
+## 2. Runtime service control
 
-## Runtime service-control and hardening
-
-| Lab | Topic | Focus |
+| Lab | Focus | Evidence state |
 |---|---|---|
-| [Lab 14](labs/14-ftp-exposure-hardening-draft/) | FTP Exposure Hardening Draft | Hardening design |
-| [Lab 15](labs/15-ftp-runtime-exposure-control-drill/) | FTP Runtime Exposure Control | Controlled FTP runtime change |
-| [Lab 16](labs/16-http-runtime-exposure-control-drill/) | HTTP Runtime Exposure Control | Controlled HTTP runtime change |
-| [Lab 17](labs/17-ssh-runtime-exposure-control-drill/) | SSH Runtime Exposure Control | Controlled SSH runtime change |
-| [Lab 18](labs/18-tn3270-safe-hardening-planning/) | TN3270 Safe Hardening Planning | Critical access-path planning |
-| [Lab 19](labs/19-network-started-task-identity-baseline/) | Network Started Task Identity Baseline | Service identity and RACF boundary |
+| [14](labs/14-ftp-exposure-hardening-draft/) | FTP hardening design | Readiness / design |
+| [15](labs/15-ftp-runtime-exposure-control-drill/) | FTP runtime exposure control | Validated locally |
+| [16](labs/16-http-runtime-exposure-control-drill/) | HTTP runtime exposure control | Validated locally |
+| [17](labs/17-ssh-runtime-exposure-control-drill/) | SSH runtime exposure control | Validated locally |
+| [18](labs/18-tn3270-safe-hardening-planning/) | TN3270 safe-hardening planning | Readiness / design |
+| [19](labs/19-network-started-task-identity-baseline/) | Network started-task identity | Validated locally |
 
----
+## 3. Connectivity and transport security
 
-## External connectivity and transport security
-
-| Lab | Topic | Focus |
+| Lab | Focus | Evidence state |
 |---|---|---|
-| [Lab 20](labs/20-external-network-connectivity-lcs-eth1-investigation/) | External Connectivity and LCS/ETH1 Investigation | Emulator/network attachment diagnosis |
-| [Lab 21](labs/21-policy-agent-attls-readiness-assessment/) | Policy Agent / AT-TLS Readiness Assessment | Read-only transport-security readiness |
-| [Lab 22](labs/22-controlled-policy-agent-attls-implementation/) | Controlled Policy Agent & AT-TLS Enablement Milestone | TTLS stack enablement checkpoint |
+| [20](labs/20-external-network-connectivity-lcs-eth1-investigation/) | LCS / ETH1 external connectivity | **Completed diagnosis / partial connectivity** |
+| [21](labs/21-policy-agent-attls-readiness-assessment/) | Policy Agent / AT-TLS readiness | **Readiness complete; system unchanged** |
+| [22](labs/22-controlled-policy-agent-attls-implementation/) | Controlled TTLS enablement | **PASS — enablement milestone** |
+| [23 · Part 1](labs/23-http-attls-integration-readiness-part-1/) | HTTP AT-TLS readiness and identity resolution | **PASS — readiness checkpoint** |
+| [23 · Part 2](labs/23-http-attls-integration-readiness-part-2/) | Policy Agent / AT-TLS troubleshooting | **PARTIAL / CONTROLLED STOP** |
+
+> Empty Lab 24 working directories are intentionally excluded from the published lab index. A directory is not treated as portfolio evidence until it contains documented, reviewable work.
 
 ---
 
 # Selected engineering milestones
 
-## Network stack vs external network path
+## Lab 20 — separate stack health from external reachability
 
-A recurring principle in this repository is:
-
-```text
-service listening
-      !=
-external reachability
-```
-
-The environment may have:
+Lab 20 establishes a critical diagnostic distinction:
 
 ```text
 TCP/IP active
-VTAM active
-TN3270 listening
-FTP / SSH / HTTP processes active
++ service listening
++ LCS initialized
+        ≠
+external path proven
 ```
 
-while an external connectivity problem still exists below the service layer.
+The work validates Communications Server and LCS-side progress while preserving the unresolved emulator/host attachment boundary instead of incorrectly describing the complete external path as working.
 
-Lab 20 is the clearest example.
-
-Validated there:
-
-```text
-TCP/IP profile processing
-DEVICE LCS1 / LINK ETH1 initialization
-LCS1 READY
-Hercules LCS device availability
-Hercules TAP backend initialization
-internal TN3270 listener availability
-```
-
-But host-to-z/OS reachability was not fully established.
-
-The remaining gap was isolated to the emulator/host integration layer rather than the core z/OS TCP/IP stack.
+This is an example of **BLOCKER DOCUMENTED** engineering: isolate the layer that works, isolate the layer that does not, and avoid changing unrelated components.
 
 ---
 
-## TN3270 is a critical dependency
+## Lab 21 — AT-TLS readiness without pretending implementation
 
-TN3270 is treated differently from other exposed services because it is the primary interactive access path into the lab environment.
+The Policy Agent executable and relevant prerequisites were inspected, while missing runtime/security dependencies were identified.
 
-That changes the engineering decision:
-
-```text
-FTP / HTTP / SSH
-        |
-        +--> suitable for controlled runtime drills
-
-TN3270
-        |
-        +--> requires stronger rollback planning
-        +--> should not be the first experimental TLS target
-```
-
-This is why Lab 18 emphasizes safe hardening planning rather than aggressive runtime modification.
-
----
-
-## RACF certificate and keyring readiness
-
-Lab 09 reviews RACF certificate and keyring inventory relevant to network encryption.
-
-The observed environment contains RACF CERTAUTH material, but no service-owned certificate/keyring material was observed for several reviewed network service identities.
-
-Important distinction:
-
-```text
-CA trust material exists
-        !=
-service TLS identity provisioned
-```
-
-The lab is therefore a **readiness inventory**, not proof of completed TLS deployment.
-
----
-
-## SMF and network-security logging readiness
-
-Lab 10 reviews the logging and audit-readiness baseline.
-
-Validated observations include:
-
-- SMF address space active;
-- active SMF parameter member identified;
-- SMF recording configuration reviewed;
-- SYSLOGD not observed active;
-- TRMD not observed active;
-- no complete IDS/syslog/TRMD event path demonstrated.
-
-The environment is z/OS V1R11. Modern zERT functionality is documented for architectural context, but it is **not available as a validated capability in this lab environment**.
-
----
-
-## z/OS UNIX network-service correlation
-
-Lab 11 extends the analysis from MVS-level configuration into USS.
-
-Observed evidence includes:
-
-- `/etc/ssh/sshd_config`;
-- SSH protocol 2;
-- `PermitRootLogin no`;
-- password authentication;
-- public-key authentication;
-- SSH host-key references;
-- SFTP subsystem configuration;
-- SSH, HTTP and FTP process evidence;
-- no active syslog daemon observed in captured evidence.
-
-This establishes the cross-layer model:
-
-```text
-network-facing service
-        |
-        v
-USS process / configuration
-        |
-        v
-UNIX identity / permissions
-        |
-        v
-RACF / SAF
-```
-
----
-
-## Network started-task identity
-
-Lab 19 introduces explicit service identity analysis.
-
-The relevant relationship is:
-
-```text
-TCPIP / FTPD / HTTPD / SSHD / PAGENT
-                |
-                v
-       started task / process
-                |
-                v
-        security identity
-                |
-                v
-              RACF
-```
-
-The Communications Server repository owns the networking interpretation.
-
-The RACF repository owns effective authorization and security-profile interpretation.
-
----
-
-# Policy Agent and AT-TLS progression
-
-## Lab 21 — readiness assessment
-
-Lab 21 is intentionally read-only.
-
-Validated findings include:
-
-- Policy Agent executable exists;
-- IBM sample material exists;
-- `BPX.DAEMON` profile present;
-- no `PAGENT` RACF user observed;
-- no `STARTED PAGENT.*` mapping observed;
-- no matching `SERVAUTH EZB.PAGENT.*` profile observed;
-- PAGENT not active;
-- no system changes performed.
-
-Correct interpretation:
+The system was intentionally left unchanged.
 
 ```text
 software present
-     |
-     v
+      ↓
 prerequisites inspected
-     |
-     v
-runtime/security gaps identified
-     |
-     v
+      ↓
+gaps identified
+      ↓
 implementation deferred
 ```
 
+That is readiness evidence, not encrypted-transport evidence.
+
 ---
 
-## Lab 22 — controlled TTLS enablement milestone
+## Lab 22 — reach the TTLS policy-processing layer
 
-Lab 22 moves from readiness into controlled runtime enablement.
+Lab 22 advances beyond readiness and performs a controlled stack-level enablement milestone.
 
-The lab establishes:
-
-- Policy Agent executable startup evidence;
-- dedicated environment data set preparation;
-- PAGENT procedure adaptation through `STDENV`;
-- `/etc/pagent.conf` preparation;
-- active TCP/IP profile identification;
-- rollback copy preservation;
-- persistent TTLS enablement in the TCP/IP profile;
-- minimal dynamic OBEY input;
-- dynamic TTLS enablement without restarting TCP/IP;
-- runtime message:
+Evidence includes:
 
 ```text
+TCPCONFIG TTLS
+        ↓
+TCP/IP accepts TTLS enablement
+        ↓
 EZZ4249I TCPIP INSTALLED TTLS POLICY HAS NO RULES
 ```
 
-This is the key current checkpoint.
-
-It proves that the stack reached the AT-TLS policy-processing layer.
+This proves that the stack reached AT-TLS policy processing.
 
 It does **not** prove:
 
 ```text
-service-specific TTLSRule installed
-target-service certificate/keyring provisioned
-stable final Policy Agent rule operation
-TLS handshake validated
-encrypted end-to-end application traffic validated
+validated service-specific TTLSRule
++ correct target-service certificate/key ring
++ stable final Policy Agent operation
++ successful TLS handshake
++ encrypted end-to-end application traffic
 ```
 
-The correct current state is:
-
-```text
-AT-TLS readiness
-      ->
-TTLS stack enablement
-      ->
-policy layer reached
-      ->
-no service-specific rule yet
-```
+The narrower claim is the correct one.
 
 ---
 
-# Current architecture
+## Lab 23 Part 1 — connect RACF cryptographic evidence to HTTP transport design
+
+Lab 23 Part 1 begins the first explicit cross-repository cryptographic handoff.
+
+The RACF security repository retained:
 
 ```text
-                    Communications Server
-                           |
-          +----------------+----------------+
-          |                |                |
-          v                v                v
-        TCP/IP            VTAM            TN3270
-          |
-          +---------+------+----------+
-                    |                 |
-                    v                 v
-              TCP services         USS services
-            FTP / HTTP / SSH      process / config
-                    |
-                    v
-                 RACF / SAF
-        identity / cert / keyring
-                    |
-                    v
-                 Policy Agent
-                    |
-                    v
-                   AT-TLS
-                    |
-                    v
-                 SMF / audit
+H7USER
+  └── LAB33RING
+        └── LAB33CERT
 ```
 
-Some elements are fully validated, others are readiness or partial-enablement milestones.
+The Communications Server side then characterizes `HTTPD1`, its configuration, STARTED-class behavior and the unresolved effective-identity/key-ring consumption path.
 
-See [`docs/ECOSYSTEM-INTEGRATION.md`](docs/ECOSYSTEM-INTEGRATION.md) for the detailed capability matrix and cross-repository boundaries.
+No AT-TLS activation, HTTPD1 change, certificate/key-ring modification or TCP/IP profile change is claimed.
+
+Result:
+
+**PASS — HTTP AT-TLS readiness checkpoint completed.**
 
 ---
 
-# Ecosystem integration
+## Lab 23 Part 2 — controlled stop is part of the evidence
 
-This repository is part of the broader **z/OS Engineering Laboratory**.
-
-Master repository:
-
-https://github.com/P-dot/zos-adcd-hercules-engineering-lab
-
-The central engineering methodology is:
+Part 2 continues the HTTP AT-TLS integration but encounters a Policy Agent initialization failure:
 
 ```text
-Build -> Execute -> Observe -> Diagnose -> Correct -> Validate -> Document
+EZZ8431I PAGENT STARTING
+        ↓
+EZZ8434I PAGENT EXITING ABNORMALLY
 ```
 
-For network-security work, this repository extends it with:
+The evidence does not establish the exact internal cause.
+
+Therefore the lab does not guess.
+
+At close:
 
 ```text
-Baseline
- -> identify exposure
- -> understand dependency
- -> prepare rollback
- -> apply minimal change
- -> validate runtime effect
- -> restore safe state where required
- -> document evidence
+TCP/IP runtime     : NOTTLS
+PAGENT             : stopped / abnormal exit
+HTTPD1             : existing service preserved
+certificate/ring   : retained RACF artifacts
+AT-TLS policy      : experimental / not active
 ```
+
+Result:
+
+**PARTIAL / CONTROLLED STOP**
+
+The next engineering action is diagnosis of Policy Agent initialization and controlled policy isolation—not blind reactivation of `TCPCONFIG TTLS`.
 
 ---
 
-# Cross-repository boundaries
-
-## RACF / SAF
-
-RACF integration includes:
+# Cross-repository architecture
 
 ```text
-started-task identity
-SERVAUTH
-BPX.DAEMON
-certificate inventory
-keyrings
+                         PORTFOLIO
+                             |
+        +--------------------+--------------------+
+        |                    |                    |
+        v                    v                    v
+     Core z/OS             RACF / SAF             USS
+        |                    |                    |
+        +----------+---------+----------+---------+
+                   |                    |
+                   v                    v
+             Communications Server / TCP/IP
+                   |
+          +--------+---------+
+          |        |         |
+          v        v         v
+        VTAM     TN3270   TCP services
+                           FTP / HTTP / SSH
+                                  |
+                                  v
+                          Policy Agent / AT-TLS
+                                  |
+                                  v
+                         transport validation
+```
+
+The domain boundary is intentional.
+
+### RACF / SAF owns
+
+```text
+identity
 effective authorization
+STARTED-class security interpretation
+SERVAUTH
+FACILITY authority
+certificate / key-ring lifecycle
+least privilege
 ```
 
-General RACF administration and least-privilege validation belong to:
-
-`P-dot/mainframe-racf-security-evidence`
-
----
-
-## USS
-
-USS integration includes:
+### Communications Server owns
 
 ```text
-network daemon
-/etc configuration
-process visibility
-UNIX ownership / permissions
+network service
+TCP/IP runtime
+network configuration
+Policy Agent
+TTLS policy
+transport behavior
+handshake / encrypted-path validation
+network-side diagnosis
 ```
 
-Generic USS administration belongs to the dedicated USS repository.
-
----
-
-## SMF
-
-This repository consumes SMF as a logging and security-evidence dependency.
-
-General SMF engineering remains part of the central z/OS engineering repository.
-
----
-
-## Scheduler and batch workloads
-
-Future batch/network integrations may follow:
+### USS owns
 
 ```text
-Scheduler
-   |
-   v
-JCL / JES2
-   |
-   v
-network-dependent workload
-   |
-   v
-Communications Server
+OMVS environment
+POSIX files and permissions
+generic process/runtime administration
 ```
 
-Scheduler controls workload timing and dependency logic.
-
-Communications Server provides the network path.
+Communications Server consumes USS evidence when a network daemon or Policy Agent depends on it.
 
 ---
 
-# Evidence philosophy
+# RACF → Communications Server cryptographic handoff
 
-A network lab should answer:
+The portfolio now has a concrete cross-domain sequence:
 
 ```text
-What was configured?
-What was active?
-What was listening?
-What changed?
-What message proved the change?
-What remained unresolved?
-What was the rollback path?
+RACF Lab 31
+authorization baseline
+      ↓
+RACF Lab 32
+controlled cryptographic delegation
+      ↓
+RACF Lab 33
+certificate + key-ring lifecycle
+      ↓
+LAB33CERT / LAB33RING retained
+      ↓
+Communications Lab 23.1
+HTTP target + identity/readiness analysis
+      ↓
+Communications Lab 23.2
+Policy Agent troubleshooting
+      ↓
+NEXT
+diagnose PAGENT
+      ↓
+validated TTLSRule
+      ↓
+validated certificate/key-ring consumption
+      ↓
+TLS handshake
+      ↓
+encrypted traffic evidence
 ```
 
-Evidence may include:
-
-- console output;
-- NETSTAT results;
-- TCP/IP profile excerpts;
-- started-task context;
-- sanitized screenshots;
-- USS configuration excerpts;
-- RACF display output;
-- SMF readiness evidence;
-- emulator-side diagnostic output after redaction;
-- before/after states;
-- rollback copies;
-- troubleshooting notes.
-
-A failed attempt can be valid evidence when it demonstrates accepted syntax discovery, release-specific behavior or an emulator limitation.
+The lower portion remains future work until evidence proves it.
 
 ---
 
-# Privacy and publication security
+# TN3270 and access-path safety
 
-This is a public repository.
+TN3270 is not treated like an ordinary experimental service.
 
-Do not publish unnecessary:
+It is a critical interactive access path into the laboratory.
 
-- real IP addresses;
+```text
+FTP / HTTP / SSH
+      ↓
+controlled service drills possible
+
+TN3270
+      ↓
+access dependency
+      ↓
+stronger rollback requirement
+      ↓
+transport changes require additional caution
+```
+
+This is why planning and evidence precede aggressive modification.
+
+---
+
+# Network observability
+
+The repository records what can actually be demonstrated in the current environment.
+
+SMF is available as an important system evidence source, but a complete modern network-security telemetry chain has not been demonstrated.
+
+In particular, modern capabilities must not be retroactively claimed for the older z/OS V1R11 laboratory merely because current IBM platforms support them.
+
+The repository therefore distinguishes:
+
+```text
+historical/current-platform reference
+              ≠
+validated capability in this environment
+```
+
+---
+
+# Publication security
+
+Public network evidence requires stricter sanitization than ordinary application output.
+
+Before publication, remove or obscure as appropriate:
+
+- credentials and authentication material;
+- private keys and secrets;
+- private/internal IP addresses;
 - MAC addresses;
-- gateways;
-- network prefixes;
-- host adapter names or identifiers;
-- TAP/tunnel host details;
-- hostnames;
-- Windows usernames;
-- local filesystem paths;
+- host adapter names and identifiers;
 - terminal/session identifiers;
-- certificate serial numbers;
-- distinguished names;
-- private key material;
-- credentials;
-- tokens or secrets.
+- certificate serials when unnecessary;
+- infrastructure details that expose the host environment;
+- unrelated personal or system-sensitive information.
 
-Use placeholders where required:
-
-```text
-<ZOS_IP>
-<HOST_IP>
-<HOST_LCS_IP>
-<HOSTNAME>
-<WINDOWS_USER>
-<LOCAL_PATH>
-```
-
-Raw evidence should remain outside Git where necessary.
-
-The existing repository redaction policy remains authoritative:
-
-[`docs/03_redaction_policy.md`](docs/03_redaction_policy.md)
+Evidence should remain technically useful after sanitization.
 
 ---
 
-# Repository structure
+# Architecture V2 alignment
+
+This repository participates in the portfolio lifecycle:
 
 ```text
-.
-├── README.md
-├── docs/
-│   ├── 01_lab_overview.md
-│   ├── 02_evidence_analysis.md
-│   ├── 03_redaction_policy.md
-│   ├── 04_commands_used.md
-│   ├── 05_lessons_learned.md
-│   └── ECOSYSTEM-INTEGRATION.md
-├── labs/
-│   ├── 02-config-operation-security/
-│   ├── ...
-│   └── 22-controlled-policy-agent-attls-implementation/
-├── evidence/
-│   ├── sanitized/
-│   └── raw/              # keep unredacted material out of Git
-├── notes/
-└── scripts/
+Discover
+  ↓
+Baseline
+  ↓
+Configure
+  ↓
+Operate
+  ↓
+Observe
+  ↓
+Diagnose
+  ↓
+Recover
+  ↓
+Improve
+  ↓
+Automate
+  ↓
+Integrate
 ```
+
+Current strengths are concentrated in:
+
+```text
+Discover
+Baseline
+Operate
+Observe
+Diagnose
+Recover / rollback planning
+Cross-domain integration
+```
+
+Transport-security work is moving from readiness toward controlled integration, but the repository does not claim the final encrypted-service state prematurely.
 
 ---
 
-# Lab environment
+# Production-track relevance
 
-The work is based on a controlled personal mainframe environment using:
+The evidence supports several portfolio production tracks.
 
-- IBM z/OS ADCD V1R11;
-- Hercules;
-- TCP/IP;
-- VTAM;
-- TN3270;
-- RACF;
-- z/OS UNIX / OMVS;
-- SDSF / operator commands;
-- native Communications Server facilities available in the environment.
+| Production track | Contribution |
+|---|---|
+| Secure Network Service | TCP/IP, service exposure, identity, transport-security path |
+| Problem Determination | Layer-by-layer connectivity and Policy Agent diagnosis |
+| Operations Automation | Network dependencies exposed to future automation |
+| End-to-End Production Cycle | RACF → network identity → service → transport evidence |
+| Secure Batch Application | FTP/JES and network trust boundaries when validated in published labs |
 
-Behavior is release- and installation-dependent.
-
-The repository documents the observed lab state rather than assuming that every production z/OS environment behaves identically.
+Cross-domain tracks should link to the repository that owns each part rather than duplicating implementation.
 
 ---
 
-# Engineering principles
+# Current capability state
 
-1. **Observe before changing.**
-2. **Separate service health from external reachability.**
-3. **Correlate runtime state with configuration.**
-4. **Understand the security identity behind each service.**
-5. **Treat TN3270 as a critical operational dependency.**
-6. **Use narrow runtime changes.**
-7. **Prepare rollback before modification.**
-8. **Do not claim encryption before validating encrypted traffic.**
-9. **Preserve failed attempts when they teach a real operational lesson.**
-10. **Redact host/network-specific data before publication.**
-11. **Keep RACF, USS, SMF and networking ownership boundaries clear.**
-12. **Distinguish validated, partial and planned capabilities.**
+## Validated / demonstrated
 
----
+- Communications Server configuration and runtime inspection;
+- TCP/IP profile review;
+- VTAM/TN3270 context;
+- exposed-service analysis;
+- FTP/HTTP/SSH runtime control drills;
+- USS/network-service correlation;
+- network started-task identity investigation;
+- LCS/ETH1 diagnosis with partial-connectivity boundary;
+- Policy Agent / AT-TLS readiness analysis;
+- TTLS stack-level enablement milestone;
+- HTTP AT-TLS readiness and identity-resolution checkpoint;
+- bounded Policy Agent failure analysis with safe NOTTLS close;
+- rollback-oriented network change discipline.
 
-# Current maturity
+## Not yet claimed as complete
 
-The repository has progressed from:
-
-```text
-TCPIP started
-VTAM active
-TN3270 listener
-NETSTAT evidence
-```
-
-to:
-
-```text
-network security baseline
-TCP/IP profile review
-service exposure analysis
-RACF certificate/keyring inventory
-SMF readiness
-USS service correlation
-```
-
-then into:
-
-```text
-FTP / HTTP / SSH runtime exposure control
-TN3270 hardening planning
-started-task identity analysis
-external LCS/ETH1 diagnosis
-```
-
-and now:
-
-```text
-Policy Agent readiness
-AT-TLS prerequisite analysis
-controlled TTLS stack enablement
-policy-processing milestone
-```
-
-The next major maturity step is a **non-critical service-specific AT-TLS implementation with validated encrypted end-to-end traffic**.
+- stable target-service Policy Agent operation;
+- validated service-specific `TTLSRule`;
+- validated target-service consumption of the retained RACF key ring;
+- successful target-service TLS handshake;
+- encrypted end-to-end application traffic;
+- production PKI;
+- production high availability;
+- modern zERT evidence in this V1R11 environment.
 
 ---
 
-# Next major milestone
+# Next engineering milestone
 
-The logical continuation from Lab 22 is:
+The immediate continuation from Lab 23 Part 2 is diagnostic, not activation-first:
 
 ```text
-choose non-critical service
-        |
-        v
-prepare RACF certificate/keyring
-        |
-        v
-create service-specific TTLSRule
-        |
-        v
-start Policy Agent under controlled conditions
-        |
-        v
-confirm policy installation
-        |
-        v
-validate TLS handshake
-        |
-        v
-validate encrypted application traffic
-        |
-        v
-collect evidence
-        |
-        v
-validate rollback / persistence
+PAGENT diagnostic initialization
+        ↓
+logging / syslog path verification
+        ↓
+policy isolation
+        ↓
+identify abnormal-exit boundary
+        ↓
+stable Policy Agent baseline
+        ↓
+minimum validated HTTP TTLSRule
+        ↓
+RACF key-ring consumption
+        ↓
+controlled TTLS activation
+        ↓
+TLS handshake validation
+        ↓
+encrypted traffic evidence
 ```
 
-TN3270 should not be the first target.
+Only after those stages are demonstrated should the repository claim a completed service-specific AT-TLS implementation.
 
 ---
 
-# Repository role
-
-`zos-communications-server-network-lab` is the **network communications, service-exposure and transport-security engineering component** of the wider z/OS Engineering Laboratory.
-
-Its evolution is:
+## Portfolio position
 
 ```text
-network discovery
-   ->
-security baseline
-   ->
-service exposure
-   ->
-RACF / certificate readiness
-   ->
-SMF / USS correlation
-   ->
-runtime control
-   ->
-identity analysis
-   ->
-external connectivity diagnosis
-   ->
-Policy Agent readiness
-   ->
-controlled TTLS enablement
-   ->
-future encrypted-service validation
+IBM z/OS Engineering Portfolio
+        |
+        +--> Systems & Operations
+        +--> Workload Automation
+        +--> Security & Compliance
+        +--> Application Development
+        +--> Diagnostics & Recovery
+        +--> Data & Storage
+        |
+        +--> Network & USS
+                 |
+                 +--> Communications Server
+                 |      TCP/IP
+                 |      VTAM / TN3270
+                 |      service exposure
+                 |      Policy Agent
+                 |      AT-TLS
+                 |
+                 +--> USS
 ```
 
-This repository should therefore be read as a progressive Communications Server engineering portfolio, with clear separation between what has been observed, what has been safely controlled, what has been partially enabled, and what still remains to be validated.
+**Repository role:** provide the networking-side evidence needed to understand, operate, diagnose and progressively secure z/OS communications without confusing configuration, readiness, partial implementation and validated runtime behavior.
