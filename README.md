@@ -595,3 +595,14 @@ A listening port is only the networking layer of the story. The Academy connects
 **Recommended path:** network baseline (Labs 02–13) → runtime service control (Labs 14–19) → [RACF cryptographic trust](https://github.com/P-dot/mainframe-racf-security-evidence#4-cryptographic-trust--labs-31-33) → AT-TLS Labs 21–23 → [diagnostics](https://github.com/P-dot/zos-problem-determination-diagnostics).
 
 [Open the z/OS Engineering Academy →](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md)
+
+
+---
+
+## z/OS Engineering Academy
+
+**Academy role:** Networking School — TCP/IP services, policy, transport security and network evidence.
+
+[Start the Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Course Catalog](https://github.com/P-dot/P-dot/blob/main/docs/COURSES.md) · [Curriculum Graph](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md) · [Cross-Domain Relationships](https://github.com/P-dot/P-dot/blob/main/docs/RELATIONSHIPS.md)
+
+> Learn the concept → execute the lab → interpret the evidence → understand the subsystem boundary → continue to the next connected course.
