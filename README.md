@@ -585,3 +585,13 @@ IBM z/OS Engineering Portfolio
 ```
 
 **Repository role:** provide the networking-side evidence needed to understand, operate, diagnose and progressively secure z/OS communications without confusing configuration, readiness, partial implementation and validated runtime behavior.
+
+---
+
+## Academy bridge — learn the security behind the socket
+
+A listening port is only the networking layer of the story. The Academy connects service exposure to started-task identity, SAF resource checks, RACF authority, certificate/key-ring lifecycle, Policy Agent / AT-TLS and diagnostic evidence.
+
+**Recommended path:** network baseline (Labs 02–13) → runtime service control (Labs 14–19) → [RACF cryptographic trust](https://github.com/P-dot/mainframe-racf-security-evidence#4-cryptographic-trust--labs-31-33) → AT-TLS Labs 21–23 → [diagnostics](https://github.com/P-dot/zos-problem-determination-diagnostics).
+
+[Open the z/OS Engineering Academy →](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md)
