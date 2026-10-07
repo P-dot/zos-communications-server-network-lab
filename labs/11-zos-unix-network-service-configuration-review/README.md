@@ -105,3 +105,12 @@ This lab extends the network security baseline from MVS datasets and started tas
 The most significant result is that SSHD is backed by visible UNIX configuration under `/etc/ssh`, with protocol 2, disabled root login, password and public key authentication, host keys and SFTP subsystem evidence. FTP and HTTP processes were also observed from UNIX process listings. SYSLOGD and `/etc/syslog.conf` were not observed in the captured evidence.
 
 The review was read-only and did not alter any service or configuration file.
+
+
+---
+### Continue learning
+
+**Previous:** [10-network-security-logging-smf-readiness-review](../10-network-security-logging-smf-readiness-review/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [12-external-reachability-validation-attempt](../12-external-reachability-validation-attempt/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

@@ -74,3 +74,12 @@ Security relevance: the operation was reversible and controlled.
 The lab demonstrates controlled runtime reduction of HTTP exposure and successful rollback. HTTPD1 was active and listening on TCP port 80, was stopped so that the listener disappeared, and was later restored so that TCP port 80 returned to LISTEN state.
 
 No permanent network configuration change was applied.
+
+
+---
+### Continue learning
+
+**Previous:** [15-ftp-runtime-exposure-control-drill](../15-ftp-runtime-exposure-control-drill/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [17-ssh-runtime-exposure-control-drill](../17-ssh-runtime-exposure-control-drill/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

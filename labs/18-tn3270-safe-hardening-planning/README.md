@@ -51,3 +51,12 @@ TN3270 was treated as a critical access service. A safe hardening planning artif
 ## Safety statement
 
 No `/P TN3270` command was issued. No `/C TN3270` command was issued. No `VARY TCPIP,,OBEYFILE` command was issued. No active `ADCD.Z111S.TCPPARMS(TN3270)` member was modified.
+
+
+---
+### Continue learning
+
+**Previous:** [17-ssh-runtime-exposure-control-drill](../17-ssh-runtime-exposure-control-drill/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [19-network-started-task-identity-baseline](../19-network-started-task-identity-baseline/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

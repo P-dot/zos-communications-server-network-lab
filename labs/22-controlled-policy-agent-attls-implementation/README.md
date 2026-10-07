@@ -102,3 +102,12 @@ Continue from this checkpoint by selecting a non-critical test service, creating
 - IBM Policy Agent and AT-TLS configuration documentation.
 - Portfolio Lab 09 — RACF Certificate and Keyring Inventory for Network Security.
 - Portfolio Lab 18 — TN3270 Safe Hardening Planning.
+
+
+---
+### Continue learning
+
+**Previous:** [21-policy-agent-attls-readiness-assessment](../21-policy-agent-attls-readiness-assessment/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [23-http-attls-integration-readiness-part-1](../23-http-attls-integration-readiness-part-1/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

@@ -65,3 +65,12 @@ Test-NetConnection $ZOS -Port 23
 Test-NetConnection $ZOS -Port 80
 Test-NetConnection $ZOS -Port 443
 ```
+
+
+---
+### Continue learning
+
+**Previous:** [11-zos-unix-network-service-configuration-review](../11-zos-unix-network-service-configuration-review/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [13-network-hardening-change-control-rollback-baseline](../13-network-hardening-change-control-rollback-baseline/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

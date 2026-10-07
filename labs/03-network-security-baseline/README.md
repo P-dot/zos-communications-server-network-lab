@@ -159,3 +159,12 @@ Recommended placeholders:
 <DEVICE_NUMBER>
 <JOBNAME>
 ```
+
+
+---
+### Continue learning
+
+**Previous:** [02-config-operation-security](../02-config-operation-security/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [04-tcpip-profile-security-review](../04-tcpip-profile-security-review/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

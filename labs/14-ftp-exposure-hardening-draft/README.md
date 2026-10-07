@@ -87,3 +87,12 @@ The safe rollback position is to continue using the original active profile and 
 ## Conclusion
 
 This lab demonstrates the correct change-control approach for network hardening on z/OS: create a candidate copy, stage the intended change, document the expected impact, prove that no runtime change was applied, and preserve rollback capability before touching the active TCP/IP configuration.
+
+
+---
+### Continue learning
+
+**Previous:** [13-network-hardening-change-control-rollback-baseline](../13-network-hardening-change-control-rollback-baseline/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [15-ftp-runtime-exposure-control-drill](../15-ftp-runtime-exposure-control-drill/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

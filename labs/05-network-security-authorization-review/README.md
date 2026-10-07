@@ -108,3 +108,12 @@ notes/commands.md
 SERVAUTH is important because z/OS Communications Server can use RACF resources to restrict access to TCP/IP stack services, network management functions, Policy Agent information, and port binding authority.
 
 This lab establishes a read-only baseline before any future hardening proposal.
+
+
+---
+### Continue learning
+
+**Previous:** [04-tcpip-profile-security-review](../04-tcpip-profile-security-review/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [06-network-security-policy-infrastructure-discovery](../06-network-security-policy-infrastructure-discovery/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

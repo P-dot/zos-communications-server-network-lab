@@ -115,3 +115,12 @@ This lab establishes a baseline of RACF runtime identities for network-facing st
 - IBM, z/OS MVS JCL Reference, section on started tasks and START command processing.
 - IBM, z/OS Security Server RACF Security Administrator's Guide, RACF classes, SETROPTS, SEARCH, RLIST and user/profile listing concepts.
 - Dinesh D. Dattani, IBM Mainframe Security: Beyond the Basics, chapters on started procedures and security administration.
+
+
+---
+### Continue learning
+
+**Previous:** [18-tn3270-safe-hardening-planning](../18-tn3270-safe-hardening-planning/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [20-external-network-connectivity-lcs-eth1-investigation](../20-external-network-connectivity-lcs-eth1-investigation/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

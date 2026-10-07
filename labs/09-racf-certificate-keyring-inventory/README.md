@@ -88,3 +88,12 @@ Therefore, this lab documents observed evidence only and does not claim that no 
 All commands used in this lab were read-only RACF display commands.
 
 No `RACDCERT ADD`, `GENCERT`, `DELETE`, `CONNECT`, `REMOVE`, `ALTER` or `SETROPTS RACLIST REFRESH` command was issued.
+
+
+---
+### Continue learning
+
+**Previous:** [08-exposed-tcp-services-configuration-review](../08-exposed-tcp-services-configuration-review/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [10-network-security-logging-smf-readiness-review](../10-network-security-logging-smf-readiness-review/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

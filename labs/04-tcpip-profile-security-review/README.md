@@ -202,3 +202,12 @@ The following values were sanitized before publication:
 - Other route values not required for public evidence
 
 The original DOCX evidence should not be committed to GitHub because it contains unsanitized network information.
+
+
+---
+### Continue learning
+
+**Previous:** [03-network-security-baseline](../03-network-security-baseline/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [05-network-security-authorization-review](../05-network-security-authorization-review/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

@@ -85,3 +85,12 @@ This lab documents the configuration artifact layer of the z/OS Communications S
 - Lab 04: TCP/IP profile security review
 - Lab 05: RACF SERVAUTH authorization review
 - Lab 06: policy infrastructure and PROCLIB discovery
+
+
+---
+### Continue learning
+
+**Previous:** [05-network-security-authorization-review](../05-network-security-authorization-review/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [07-tn3270-service-security-exposure-review](../07-tn3270-service-security-exposure-review/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

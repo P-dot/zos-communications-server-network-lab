@@ -75,3 +75,12 @@ This lab demonstrates the operational control of FTP exposure at runtime while p
 ## Conclusion
 
 The FTP runtime exposure drill was completed successfully. FTP was observed active, stopped, verified as no longer listening, and later restored. The exercise was controlled, reversible, and did not change permanent TCP/IP configuration.
+
+
+---
+### Continue learning
+
+**Previous:** [14-ftp-exposure-hardening-draft](../14-ftp-exposure-hardening-draft/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [16-http-runtime-exposure-control-drill](../16-http-runtime-exposure-control-drill/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

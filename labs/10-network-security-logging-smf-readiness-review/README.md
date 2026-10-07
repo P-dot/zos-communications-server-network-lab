@@ -108,3 +108,12 @@ No PARMLIB member was edited.
 No SYSLOGD or TRMD address space was started.  
 No IDS or zERT function was activated.  
 No TCP/IP profile changes were made.
+
+
+---
+### Continue learning
+
+**Previous:** [09-racf-certificate-keyring-inventory](../09-racf-certificate-keyring-inventory/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [11-zos-unix-network-service-configuration-review](../11-zos-unix-network-service-configuration-review/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

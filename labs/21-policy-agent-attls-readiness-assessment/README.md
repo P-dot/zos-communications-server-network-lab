@@ -22,3 +22,12 @@ Implementation is intentionally deferred to a separate controlled-change lab. No
 
 ## Final assessment
 **Readiness assessment complete. System unchanged. Controlled PAGENT/AT-TLS implementation deferred.**
+
+
+---
+### Continue learning
+
+**Previous:** [20-external-network-connectivity-lcs-eth1-investigation](../20-external-network-connectivity-lcs-eth1-investigation/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [22-controlled-policy-agent-attls-implementation](../22-controlled-policy-agent-attls-implementation/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

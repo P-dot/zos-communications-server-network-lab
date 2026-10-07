@@ -83,3 +83,12 @@ No permanent configuration change was applied.
 ## Result
 
 Runtime exposure control and rollback were validated for the SSH service.
+
+
+---
+### Continue learning
+
+**Previous:** [16-http-runtime-exposure-control-drill](../16-http-runtime-exposure-control-drill/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [18-tn3270-safe-hardening-planning](../18-tn3270-safe-hardening-planning/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

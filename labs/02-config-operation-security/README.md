@@ -54,3 +54,12 @@ TCP/IP profile changes
 VTAMLST edits
 host network adapter changes
 ```
+
+
+---
+### Continue learning
+
+**Previous:** Course introduction  
+**Course:** [Course home](../../README.md)  
+**Next:** [03-network-security-baseline](../03-network-security-baseline/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

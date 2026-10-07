@@ -83,3 +83,12 @@ No Policy Agent, IKED, TRMD or SYSLOGD component was activated.
 ## Conclusion
 
 The lab establishes a controlled change baseline for the next phase of network security hardening. Backup libraries exist and key network configuration/procedure members were copied or verified before any future configuration changes are attempted.
+
+
+---
+### Continue learning
+
+**Previous:** [12-external-reachability-validation-attempt](../12-external-reachability-validation-attempt/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [14-ftp-exposure-hardening-draft](../14-ftp-exposure-hardening-draft/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

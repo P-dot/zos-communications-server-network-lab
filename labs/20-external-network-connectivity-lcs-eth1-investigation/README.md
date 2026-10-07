@@ -21,3 +21,12 @@ The remaining gap was isolated to the emulator/host networking integration layer
 
 ## Security
 Real IP addresses, MAC addresses, gateways, adapter identifiers, network prefixes and other host-specific values are intentionally omitted.
+
+
+---
+### Continue learning
+
+**Previous:** [19-network-started-task-identity-baseline](../19-network-started-task-identity-baseline/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [21-policy-agent-attls-readiness-assessment](../21-policy-agent-attls-readiness-assessment/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

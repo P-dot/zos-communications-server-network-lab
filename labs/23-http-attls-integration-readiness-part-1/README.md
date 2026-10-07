@@ -91,3 +91,12 @@ The screenshots supplied during execution are preserved under `evidence/screensh
 - IBM z/OS Security Server RACF documentation for STARTED class and RACDCERT/key-ring authorization.
 - Portfolio: `mainframe-racf-security-evidence`, Labs 31-33.
 - Portfolio: `zos-communications-server-network-lab`, Labs 08, 16, 19 and 22.
+
+
+---
+### Continue learning
+
+**Previous:** [22-controlled-policy-agent-attls-implementation](../22-controlled-policy-agent-attls-implementation/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [23-http-attls-integration-readiness-part-2](../23-http-attls-integration-readiness-part-2/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

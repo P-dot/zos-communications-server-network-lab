@@ -87,3 +87,12 @@ Security relevance:
 This lab correlates exposed TCP services with their started task procedures. FTP, SSH and HTTP were observed as listening services, and their associated procedures were reviewed in read-only mode. HTTPS on port 443 was checked and no runtime listener was observed in the captured evidence.
 
 The lab strengthens the network security baseline by connecting runtime service exposure with configuration artifacts.
+
+
+---
+### Continue learning
+
+**Previous:** [07-tn3270-service-security-exposure-review](../07-tn3270-service-security-exposure-review/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [09-racf-certificate-keyring-inventory](../09-racf-certificate-keyring-inventory/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)

@@ -94,3 +94,12 @@ Combined with previous labs, no runtime Policy Agent was observed and no active 
 ## Conclusion
 
 This lab documents the TN3270 configuration path and establishes a security exposure baseline for interactive z/OS access. It connects the runtime listening service on port 23 with the actual TN3270 configuration member and identifies commented secure-port examples for future hardening analysis.
+
+
+---
+### Continue learning
+
+**Previous:** [06-network-security-policy-infrastructure-discovery](../06-network-security-policy-infrastructure-discovery/)  
+**Course:** [Course home](../../README.md)  
+**Next:** [08-exposed-tcp-services-configuration-review](../08-exposed-tcp-services-configuration-review/)  
+**Academy:** [z/OS Engineering Academy](https://github.com/P-dot/P-dot/blob/main/docs/ACADEMY.md) · [Curriculum](https://github.com/P-dot/P-dot/blob/main/docs/CURRICULUM.md)
